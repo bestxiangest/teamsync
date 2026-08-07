@@ -1,0 +1,164 @@
+import request from '@/utils/http';
+/**
+ * 获取项目列表
+ * @param archived 是否查询归档项目（true: 已归档, false: 活跃项目）
+ * @param groupId 分组ID (undefined: 全部, 0: 根目录, >0: 特定分组)
+ * @returns 项目列表
+ */
+export function fetchProjectList(archived = false, groupId) {
+    return request.get({
+        url: '/projects',
+        params: { archived, groupId }
+    });
+}
+/**
+ * 获取分组列表
+ * @returns 分组列表
+ */
+export function fetchGroupList() {
+    return request.get({
+        url: '/project-groups'
+    });
+}
+/**
+ * 创建分组
+ * @param name 分组名称
+ * @returns 创建的分组
+ */
+export function createGroup(name) {
+    return request.post({
+        url: '/project-groups',
+        data: { name },
+        showSuccessMessage: true
+    });
+}
+/**
+ * 删除分组
+ * @param id 分组ID
+ */
+export function deleteGroup(id) {
+    return request.del({
+        url: `/project-groups/${id}`,
+        showSuccessMessage: true
+    });
+}
+
+/**
+ * 更新分组
+ * @param id 分组ID
+ * @param name 分组名称
+ * @returns 操作结果
+ */
+export function updateGroup(id, name) {
+    return request.put({
+        url: `/project-groups/${id}`,
+        data: { name },
+        showSuccessMessage: true
+    });
+}
+
+/**
+ * 更新分组排序
+ * @param id 分组ID
+ * @param sort 排序号
+ * @returns 操作结果
+ */
+export function updateGroupSort(id, sort) {
+    return request.put({
+        url: `/project-groups/${id}/sort`,
+        data: { sort },
+        showSuccessMessage: true
+    });
+}
+
+/**
+ * 移动项目到分组
+ * @param projectId 项目ID
+ * @param targetGroupId 目标分组ID (0表示根目录)
+ */
+export function moveProject(projectId, targetGroupId) {
+    return request.put({
+        url: `/projects/${projectId}/move`,
+        data: { targetGroupId },
+        showSuccessMessage: true
+    });
+}
+
+/**
+ * 创建新项目
+ * @param params 创建项目参数
+ * @returns 创建的项目信息
+ */
+export function createProject(params) {
+    return request.post({
+        url: '/projects',
+        data: params,
+        showSuccessMessage: true
+    });
+}
+/**
+ * 获取项目详情
+ * @param id 项目ID
+ * @returns 项目信息
+ */
+export function getProject(id) {
+    return request.get({
+        url: `/projects/${id}`
+    });
+}
+/**
+ * 更新项目信息
+ * @param id 项目ID
+ * @param params 更新参数
+ * @returns 更新后的项目信息
+ */
+export function updateProject(id, params) {
+    return request.put({
+        url: `/projects/${id}`,
+        data: params,
+        showSuccessMessage: true
+    });
+}
+/**
+ * 更新项目进度
+ * @param id 项目ID
+ * @param progress 进度值 0-100
+ * @returns 更新后的项目信息
+ */
+export function updateProjectProgress(id, progress) {
+    return updateProject(id, { progress });
+}
+/**
+ * 删除项目
+ * @param id 项目ID
+ * @returns 操作结果
+ */
+export function deleteProject(id) {
+    return request.del({
+        url: `/projects/${id}`,
+        showSuccessMessage: true
+    });
+}
+/**
+ * 归档项目
+ * @param id 项目ID
+ * @returns 操作结果
+ */
+export function archiveProject(id) {
+    return request.put({
+        url: `/projects/${id}/archive`,
+        showSuccessMessage: true
+    });
+}
+/**
+ * 取消归档项目（还原）
+ * @param id 项目ID
+ * @returns 操作结果
+ */
+export function unarchiveProject(id) {
+    return request.put({
+        url: `/projects/${id}/unarchive`,
+        showSuccessMessage: true
+    });
+}
+//# sourceMappingURL=project.js.map

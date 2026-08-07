@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.sharpcaterpillar.teamsync.mapper.PmProjectMapper">
+
+    <select id="selectProjectsWithGroup" resultType="top.sharpcaterpillar.teamsync.entity.PmProject">
+        SELECT
+            p.id,
+            p.name,
+            p.description,
+            p.owner_id,
+            p.progress,
+            p.is_deleted,
+            p.is_archived,
+            p.created_at,
+            p.updated_at,
+            COALESCE(p.group_id, 0) AS groupId
+        FROM pm_project p
+        LEFT JOIN pm_project_member pm ON p.id = pm.project_id AND pm.user_id = #{userId}
+        WHERE p.is_deleted = 0
+        <choose>
+            <when test="isAdmin">
+                <if test="groupId != null">
+                    AND COALESCE(p.group_id, 0) = #{groupId}
+                </if>
+            </when>
+            <otherwise>
+                AND pm.user_id = #{userId}
+                <if test="groupId != null">
+                    AND COALESCE(p.group_id, 0) = #{groupId}
+                </if>
+            </otherwise>
+        </choose>
+        <if test="archived != null">
+            AND p.is_archived = #{archived}
+        </if>
+        ORDER BY p.updated_at DESC
+    </select>
+
+</mapper>

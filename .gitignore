@@ -1,0 +1,36 @@
+.DS_Store
+**/.DS_Store
+
+# IDE and local editor state
+.idea/
+.vscode/
+*.iml
+
+# Build output
+target/
+build/
+dist/
+dist-ssr/
+
+# Frontend dependencies and generated artifacts
+node_modules/
+TeamSync_web/node_modules/
+TeamSync_web/dist/
+TeamSync_web/dist-ssr/
+TeamSync_web/.auto-import.json
+TeamSync_web/src/types/import/auto-imports.d.ts
+TeamSync_web/src/types/import/components.d.ts
+
+# Logs, local captures and archives
+*.log
+.playwright-mcp/
+TeamSync/logs/
+TeamSync_web/TeamSync_web_dist_*.zip
+
+# Local-only env overrides
+.env.local
+*.local
+
+# Frontend local env (contains secrets like VITE_LOCK_ENCRYPT_KEY)
+TeamSync_web/.env
+TeamSync_web/.env.*

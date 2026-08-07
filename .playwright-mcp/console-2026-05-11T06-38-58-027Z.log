@@ -1,0 +1,682 @@
+[ 1002932ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1002946ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T06:55:40.965Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1002948ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1062932ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1062935ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T06:56:40.960Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1062936ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1122935ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1122938ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T06:57:40.962Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1122938ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1182932ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1182934ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T06:58:40.959Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1182935ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1242928ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1242930ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T06:59:40.955Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1242930ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1302931ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1302933ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:00:40.958Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1302934ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1362923ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1362925ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:01:40.950Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1362926ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1422934ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1422936ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:02:40.962Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1422937ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1482933ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1482936ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:03:40.961Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1482936ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1542926ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1542930ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:04:40.954Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1542930ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1602931ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1602933ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:05:40.958Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1602933ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1662928ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1662929ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:06:40.955Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1662930ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1722932ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1722934ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:07:40.959Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1722934ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1782929ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1782930ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:08:40.956Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1782931ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1842932ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1842934ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:09:40.959Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1842934ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1902923ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1902925ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:10:40.950Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1902925ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 1962925ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 1962927ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:11:40.952Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 1962928ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2022944ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2022948ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:12:40.971Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2022949ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2082931ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2082932ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:13:40.958Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2082933ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2142934ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2142936ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:14:40.961Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2142936ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2202923ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2202924ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:15:40.950Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2202925ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2262926ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2262927ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:16:40.953Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2262928ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2322929ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2322931ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:17:40.956Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2322931ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2382929ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2382931ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:18:40.957Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2382931ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2442925ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2442926ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:19:40.952Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2442927ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2502935ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2502937ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:20:40.962Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2502937ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2562925ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2562927ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:21:40.952Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2562928ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2622927ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2622929ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:22:40.955Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2622930ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2682920ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2682922ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:23:40.947Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2682923ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2742921ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2742923ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:24:40.948Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2742924ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2802930ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2802932ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:25:40.957Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2802932ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2862935ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2862937ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:26:40.962Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2862938ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2922933ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2922935ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:27:40.961Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2922936ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 2982933ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 2982934ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:28:40.960Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 2982935ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3042935ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3042937ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:29:40.962Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3042937ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3102925ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3102926ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:30:40.952Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3102927ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3162924ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3162925ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:31:40.951Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3162926ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3222933ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3222935ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:32:40.960Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3222935ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3282925ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3282927ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:33:40.952Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3282927ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3342934ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3342936ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:34:40.961Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3342936ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3402940ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3402943ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:35:40.968Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3402943ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3462923ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3462925ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:36:40.950Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3462925ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3522924ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3522926ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:37:40.951Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3522926ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3582934ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3582936ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:38:40.961Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3582936ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3642930ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3642932ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:39:40.957Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3642932ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3702929ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3702931ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:40:40.957Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3702932ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3762931ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3762933ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:41:40.959Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3762934ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3822938ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3822941ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:42:40.965Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3822942ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3882921ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3882922ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:43:40.948Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3882922ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 3942935ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 3942937ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:44:40.962Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 3942937ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4002935ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4002937ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:45:40.962Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4002937ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4062931ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4062934ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:46:40.959Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4062934ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4122924ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4122927ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:47:40.951Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4122928ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4182936ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4182937ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:48:40.963Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4182938ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4242928ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4242930ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:49:40.956Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4242931ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4302927ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4302929ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:50:40.954Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4302929ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4362923ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4362924ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:51:40.950Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4362925ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4422928ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4422930ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:52:40.955Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4422930ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4482923ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4482925ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:53:40.950Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4482925ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4542929ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4542930ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:54:40.956Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4542931ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4602928ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4602930ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:55:40.955Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4602930ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703
+[ 4662925ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8081/api/big-screen/task-reminder:0
+[ 4662927ms] [ERROR] [HTTP Error] {code: 401, message: 未授权访问，请重新登录, data: undefined, timestamp: 2026-05-11T07:56:40.952Z, url: undefined} @ http://127.0.0.1:8081/src/utils/http/error.js?t=1778482540126:94
+[ 4662927ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 未授权访问，请重新登录
+    at createHttpError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:81:12)
+    at handleUnauthorizedError (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:85:19)
+    at http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:76:9
+    at async Axios.request (http://127.0.0.1:8081/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:145:21)
+    at async retryRequest (http://127.0.0.1:8081/src/utils/http/index.js?t=1778482540126:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:702:12)
+    at async refreshData (http://127.0.0.1:8081/src/views/big-screen/task-reminder/index.vue?t=1778482540126:91:28) @ http://127.0.0.1:8081/src/api/big-screen.ts?t=1778482540126:703

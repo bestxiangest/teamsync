@@ -1,0 +1,43 @@
+[     393ms] [LOG] 
+[32m欢迎使用 Art Design Pro！
+[0m
+[36m哇！你居然在用我的项目～ 好用的话别忘了去 GitHub 点个 ★Star 呀，你的支持就是我更新的超强动力！祝使用体验满分💯
+[0m
+[33mGitHub: https://github.com/Daymychen/art-design-pro
+[0m
+[31m技术支持（QQ群）: 1038930070，和开发者一起交流～ 群里有小伙伴实时答疑，遇到问题不用慌！
+[0m
+ @ http://127.0.0.1:5173/src/utils/sys/console.ts:10
+[     444ms] [LOG] 🍍 "worktabStore" store installed 🆕 @ http://127.0.0.1:5173/node_modules/.vite/deps/pinia.js?v=23f07cf2:4616
+[  227991ms] [LOG] 
+[32m欢迎使用 Art Design Pro！
+[0m
+[36m哇！你居然在用我的项目～ 好用的话别忘了去 GitHub 点个 ★Star 呀，你的支持就是我更新的超强动力！祝使用体验满分💯
+[0m
+[33mGitHub: https://github.com/Daymychen/art-design-pro
+[0m
+[31m技术支持（QQ群）: 1038930070，和开发者一起交流～ 群里有小伙伴实时答疑，遇到问题不用慌！
+[0m
+ @ http://127.0.0.1:5173/src/utils/sys/console.ts:10
+[  228157ms] [LOG] 🍍 "worktabStore" store installed 🆕 @ http://127.0.0.1:5173/node_modules/.vite/deps/pinia.js?v=23f07cf2:4616
+[ 1683435ms] [ERROR] [HTTP Error] {code: 400, message: 网络连接异常，请检查网络连接, data: undefined, timestamp: 2026-05-13T10:56:11.604Z, url: /big-screen/task-reminder} @ http://127.0.0.1:5173/src/utils/http/error.js?t=1778668314909:94
+[ 1683435ms] [WARNING] [TaskReminderScreen] 获取真实大屏数据失败，已使用本地兜底数据: HttpError: 网络连接异常，请检查网络连接
+    at handleError (http://127.0.0.1:5173/src/utils/http/error.js?t=1778668314909:70:15)
+    at http://127.0.0.1:5173/src/utils/http/index.js?t=1778668314909:77:27
+    at async Axios.request (http://127.0.0.1:5173/node_modules/.vite/deps/axios.js?v=23f07cf2:2197:14)
+    at async request (http://127.0.0.1:5173/src/utils/http/index.js?t=1778668314909:145:21)
+    at async retryRequest (http://127.0.0.1:5173/src/utils/http/index.js?t=1778668314909:121:16)
+    at async getTaskReminderScreenData (http://127.0.0.1:5173/src/api/big-screen.ts?t=1778668314909:702:12)
+    at async refreshData (http://127.0.0.1:5173/src/views/big-screen/task-reminder/index.vue?t=1778668314909:98:28) @ http://127.0.0.1:5173/src/api/big-screen.ts?t=1778668314909:703
+[ 1894393ms] [LOG] [vite] server connection lost. Polling for restart... @ http://127.0.0.1:5173/@vite/client:864
+[ 1897578ms] [LOG] 
+[32m欢迎使用 Art Design Pro！
+[0m
+[36m哇！你居然在用我的项目～ 好用的话别忘了去 GitHub 点个 ★Star 呀，你的支持就是我更新的超强动力！祝使用体验满分💯
+[0m
+[33mGitHub: https://github.com/Daymychen/art-design-pro
+[0m
+[31m技术支持（QQ群）: 1038930070，和开发者一起交流～ 群里有小伙伴实时答疑，遇到问题不用慌！
+[0m
+ @ http://127.0.0.1:5173/src/utils/sys/console.ts:10
+[ 1897708ms] [LOG] 🍍 "worktabStore" store installed 🆕 @ http://127.0.0.1:5173/node_modules/.vite/deps/pinia.js?v=23f07cf2:4616

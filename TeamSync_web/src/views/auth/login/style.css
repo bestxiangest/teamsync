@@ -1,0 +1,355 @@
+@reference '@styles/core/tailwind.css';
+
+/* ============================================
+   Aurora Theme Variables
+   ============================================ */
+:root {
+  --aurora-1: rgba(100, 150, 255, 0.55);
+  --aurora-2: rgba(180, 130, 255, 0.5);
+  --aurora-3: rgba(80, 210, 180, 0.45);
+  --aurora-4: rgba(255, 150, 190, 0.45);
+  --aurora-bg: #f0f2f8;
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-shadow: rgba(31, 38, 135, 0.06);
+  --glass-input-bg: rgba(255, 255, 255, 0.6);
+  --glass-input-focus-bg: rgba(255, 255, 255, 0.85);
+}
+
+.dark {
+  --aurora-1: rgba(40, 70, 180, 0.6);
+  --aurora-2: rgba(100, 40, 160, 0.55);
+  --aurora-3: rgba(0, 130, 140, 0.5);
+  --aurora-4: rgba(30, 100, 70, 0.45);
+  --aurora-bg: #0a0a0f;
+  --glass-bg: rgba(20, 20, 30, 0.5);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: rgba(0, 0, 0, 0.4);
+  --glass-input-bg: rgba(255, 255, 255, 0.06);
+  --glass-input-focus-bg: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   Aurora Background
+   ============================================ */
+.aurora-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background-color: var(--aurora-bg);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.85;
+  will-change: transform;
+  animation: aurora-drift 20s ease-in-out infinite alternate;
+}
+
+.aurora-blob-1 {
+  top: -15%;
+  left: -10%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, var(--aurora-1) 0%, transparent 70%);
+  animation-duration: 22s;
+  animation-delay: 0s;
+}
+
+.aurora-blob-2 {
+  top: 30%;
+  right: -15%;
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(circle, var(--aurora-2) 0%, transparent 70%);
+  animation-duration: 26s;
+  animation-delay: -4s;
+}
+
+.aurora-blob-3 {
+  bottom: -20%;
+  left: 15%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, var(--aurora-3) 0%, transparent 70%);
+  animation-duration: 30s;
+  animation-delay: -8s;
+}
+
+.aurora-blob-4 {
+  top: 10%;
+  left: 35%;
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, var(--aurora-4) 0%, transparent 70%);
+  animation-duration: 18s;
+  animation-delay: -12s;
+}
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate(8vw, -8vh) scale(1.12) rotate(12deg);
+  }
+  66% {
+    transform: translate(-6vw, 12vh) scale(0.92) rotate(-8deg);
+  }
+  100% {
+    transform: translate(-10vw, 4vh) scale(1.06) rotate(5deg);
+  }
+}
+
+/* ============================================
+   Glassmorphism Panel
+   ============================================ */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 40px var(--glass-shadow);
+  border-radius: 24px;
+}
+
+/* ============================================
+   Auth Right Wrap (Login Form)
+   ============================================ */
+.auth-right-wrap {
+  @apply absolute inset-0 w-[420px] m-auto overflow-visible flex items-center justify-center
+    max-sm:px-6 max-sm:w-full;
+
+  .form {
+    @apply w-full py-10 px-10 max-sm:px-6;
+  }
+
+  .title {
+    @apply text-g-900 text-3xl font-semibold max-sm:pt-10;
+  }
+
+  .sub-title {
+    @apply mt-2 text-g-500 text-sm;
+  }
+
+  .custom-height {
+    @apply !h-[42px];
+  }
+}
+
+/* ============================================
+   Form Input Overrides (inside glass panel)
+   ============================================ */
+.glass-panel :deep(.el-input__wrapper) {
+  background-color: var(--glass-input-bg) !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.dark .glass-panel :deep(.el-input__wrapper) {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.glass-panel :deep(.el-input__wrapper:hover) {
+  background-color: var(--glass-input-focus-bg) !important;
+}
+
+.glass-panel :deep(.el-input__wrapper.is-focus) {
+  background-color: var(--glass-input-focus-bg) !important;
+  border-color: var(--el-color-primary) !important;
+  box-shadow: 0 0 0 3px rgba(93, 135, 255, 0.12) !important;
+}
+
+.dark .glass-panel :deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 3px rgba(93, 135, 255, 0.25) !important;
+}
+
+/* ============================================
+   Aurora Login Button
+   ============================================ */
+.btn-aurora {
+  background-image: linear-gradient(
+    135deg,
+    var(--el-color-primary) 0%,
+    #7c6cf0 50%,
+    var(--el-color-primary) 100%
+  ) !important;
+  background-size: 200% auto !important;
+  border: none !important;
+  border-radius: 12px !important;
+  transition: all 0.4s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-aurora:hover {
+  background-position: right center !important;
+  box-shadow: 0 6px 24px rgba(93, 135, 255, 0.35) !important;
+  transform: translateY(-1px);
+}
+
+.btn-aurora:active {
+  transform: translateY(0);
+}
+
+/* ============================================
+   Slogan (LoginLeftView)
+   ============================================ */
+.slogan-wrap {
+  position: absolute;
+  bottom: 60px;
+  left: 48px;
+  z-index: 10;
+  max-width: 520px;
+  animation: slogan-fade-in 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
+  opacity: 0;
+}
+
+.slogan-line {
+  font-weight: 300;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  color: var(--art-gray-800);
+}
+
+.slogan-line-1 {
+  font-size: clamp(2.2rem, 3.5vw, 3.6rem);
+}
+
+.slogan-line-2 {
+  font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+  margin-top: 4px;
+}
+
+.slogan-emphasis {
+  font-weight: 500;
+  background: linear-gradient(135deg, var(--el-color-primary), #7c6cf0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.slogan-sub {
+  margin-top: 16px;
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  letter-spacing: 0.15em;
+  color: var(--art-gray-500);
+  font-weight: 300;
+}
+
+.slogan-divider {
+  width: 48px;
+  height: 2px;
+  margin-top: 20px;
+  background: linear-gradient(90deg, var(--el-color-primary), transparent);
+  border-radius: 1px;
+}
+
+.dark .slogan-line {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.dark .slogan-sub {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+@keyframes slogan-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   Login Left View
+   ============================================ */
+.login-left-view {
+  position: relative;
+  width: 65vw;
+  height: 100%;
+
+  .logo {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    padding: 16px;
+
+    .title {
+      margin-left: 10px;
+      font-size: 20px;
+      font-weight: 400;
+    }
+  }
+
+  @media only screen and (width <= 1600px) {
+    width: 60vw;
+  }
+
+  @media only screen and (width <= 1180px) {
+    display: none;
+  }
+}
+
+/* ============================================
+   Form Slide-in Animation
+   ============================================ */
+@keyframes formFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.auth-right-wrap .form {
+  animation: formFadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
+  opacity: 0;
+}
+
+/* ============================================
+   Responsive: Mobile full-page aurora
+   ============================================ */
+@media only screen and (width <= 1180px) {
+  .aurora-blob {
+    filter: blur(70px);
+    opacity: 0.5;
+  }
+
+  .auth-right-wrap {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .slogan-wrap {
+    display: none;
+  }
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob {
+    animation: none;
+  }
+
+  .auth-right-wrap .form,
+  .slogan-wrap {
+    animation: none;
+    opacity: 1;
+  }
+}
