@@ -79,7 +79,7 @@
 
     <!-- 看板主体 -->
     <div class="kanban-container" v-loading="loading">
-      <div class="kanban-scroll" ref="boardContainerRef">
+      <div class="kanban-scroll" ref="boardContainerRef" @wheel="handleBoardWheel">
         <!-- 阶段列 -->
         <div v-for="stage in stages" :key="stage.id" class="stage-column">
           <!-- 列标题 -->
@@ -284,7 +284,6 @@
                   <ArtSvgIcon icon="ri:inbox-line" />
                   <span>暂无任务</span>
                 </div>
-
               </template>
             </draggable>
 
@@ -411,6 +410,23 @@
   let dueTimeRefreshTimer: number | undefined
   // 看板滚动容器引用
   const boardContainerRef = ref<HTMLElement | null>(null)
+
+  /**
+   * 看板横向滚动：支持在任意位置（包括任务卡片上）按住 Shift + 滚轮左右滚动。
+   * 浏览器原生 shift+wheel 只会滚动最近的可滚动祖先（任务列内部的垂直滚动区），
+   * 不会继续向上滚动看板容器，因此这里手动接管并滚动看板本身。
+   */
+  const handleBoardWheel = (e: WheelEvent) => {
+    if (!e.shiftKey) return
+    const board = boardContainerRef.value
+    if (!board) return
+    e.preventDefault()
+    // shift 按下时滚轮垂直增量通常由浏览器转为水平，这里统一取水平/垂直方向中更大的增量
+    const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX
+    if (delta !== 0) {
+      board.scrollLeft += delta
+    }
+  }
 
   // 项目进度相关
   const getTaskProgressValue = (task: BoardTask): number => {
@@ -1303,23 +1319,9 @@
     overflow-y: hidden;
     padding-bottom: 16px;
 
-    &::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: var(--el-fill-color-light);
-      border-radius: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: var(--el-border-color);
-      border-radius: 4px;
-
-      &:hover {
-        background: var(--el-border-color-darker);
-      }
-    }
+    // Firefox 滚动条（WebKit 的 ::-webkit-scrollbar 见底部非 scoped 样式块）
+    scrollbar-width: thin;
+    scrollbar-color: var(--el-border-color) var(--el-fill-color-light);
   }
 
   .stage-column {
@@ -2084,5 +2086,31 @@
       padding: 10px;
       border-radius: 10px;
     }
+  }
+</style>
+
+<!--
+  看板横向滚动条样式：必须非 scoped。
+  原因：① Vue scoped 会给选择器追加 [data-v] 属性，WebKit 无法识别带属性选择器的
+       滚动条伪元素；② 全局 reset.scss 中 `::-webkit-scrollbar { height: 0 !important }`
+       会把横向滚动条高度压为 0（不可见），这里用更高特异性的选择器 + !important 覆盖。
+-->
+<style lang="scss">
+  .kanban-scroll::-webkit-scrollbar {
+    height: 8px !important;
+  }
+
+  .kanban-scroll::-webkit-scrollbar-track {
+    background: var(--el-fill-color-light);
+    border-radius: 4px;
+  }
+
+  .kanban-scroll::-webkit-scrollbar-thumb {
+    background: var(--el-border-color);
+    border-radius: 4px;
+  }
+
+  .kanban-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--el-border-color-darker);
   }
 </style>
