@@ -66,4 +66,3 @@ export class IframeRouteManager {
         }
     }
 }
-//# sourceMappingURL=IframeRouteManager.js.map

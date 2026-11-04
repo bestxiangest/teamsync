@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import top.sharpcaterpillar.teamsync.utils.JwtUtils;
 import top.sharpcaterpillar.teamsync.utils.UserContext;
@@ -29,6 +30,11 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 跨域预检请求（OPTIONS）按规范不携带 Authorization，必须放行，否则浏览器拿到 401 会直接判定 CORS 失败
+        if (CorsUtils.isPreFlightRequest(request)) {
+            return true;
+        }
+
         // 获取 Authorization header
         String authHeader = request.getHeader(AUTHORIZATION_HEADER);
         

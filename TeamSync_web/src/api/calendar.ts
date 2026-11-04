@@ -1,8 +1,6 @@
 import request from '@/utils/http'
 
-export type CalendarSourceType =
-  | 'TASK'
-  | 'RECURRING_PLAN_RUN'
+export type CalendarSourceType = 'TASK' | 'RECURRING_PLAN_RUN'
 
 export type CalendarTaskStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED' | 'OVERDUE'
 
@@ -22,6 +20,7 @@ export interface CalendarEvent {
   sourceType: CalendarSourceType
   sourceId: number
   title: string
+  description?: string
   startTime: string
   endTime?: string
   dueTime?: string
@@ -30,9 +29,12 @@ export interface CalendarEvent {
   priority?: number
   projectId?: number
   projectName?: string
+  creatorId?: number
+  creatorName?: string
   colorType?: 'primary' | 'success' | 'warning' | 'danger' | 'info' | string
   overdue: boolean
   targetPath?: string
+  assignees?: CalendarAssignee[]
 }
 
 export interface CalendarAssignee {

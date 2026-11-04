@@ -75,10 +75,14 @@ public class PmProjectMemberServiceImpl extends ServiceImpl<PmProjectMemberMappe
             List<SysUser> users = userMapper.selectBatchIds(userIds);
             userMap = users.stream().collect(Collectors.toMap(SysUser::getId, user -> user));
         }
-
+        // 账号已在平台删除的成员不再返回，避免前端展示无头像/无名字的残留成员
         List<MemberVO> result = new ArrayList<>();
         for (PmProjectMember member : members) {
-            result.add(toMemberVO(project, member, userMap.get(member.getUserId()), currentUserId));
+            SysUser user = userMap.get(member.getUserId());
+            if (user == null) {
+                continue;
+            }
+            result.add(toMemberVO(project, member, user, currentUserId));
         }
         return result;
     }
@@ -197,11 +201,11 @@ public class PmProjectMemberServiceImpl extends ServiceImpl<PmProjectMemberMappe
 
         PmProjectMember member = getMemberOrThrow(projectId, userId);
         SysUser targetUser = userMapper.selectById(userId);
-        if (targetUser == null) {
-            throw new RuntimeException("目标用户不存在");
+        // 目标账号已从平台删除时，也允许项目管理员/拥有者清理残留的项目成员记录
+        if (targetUser != null && !canManageTarget(project, operatorId, member, targetUser)) {
+            throw new RuntimeException("您不能移除此成员");
         }
-
-        if (!canManageTarget(project, operatorId, member, targetUser)) {
+        if (targetUser == null && !canManageTarget(project, operatorId, member, (SysUser) null)) {
             throw new RuntimeException("您不能移除此成员");
         }
 
@@ -210,7 +214,9 @@ public class PmProjectMemberServiceImpl extends ServiceImpl<PmProjectMemberMappe
                 .eq(PmProjectMember::getUserId, userId);
         this.remove(query);
         log.info("成员移除成功: projectId={}, targetUserId={}, operatorId={}", projectId, userId, operatorId);
-        notificationService.notifyProjectMemberRemoved(project, userId, operatorId);
+        if (targetUser != null) {
+            notificationService.notifyProjectMemberRemoved(project, userId, operatorId);
+        }
     }
 
     @Override

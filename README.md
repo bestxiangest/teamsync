@@ -8,8 +8,9 @@ TeamSync 是一个面向团队协作和项目推进的项目管理系统，包�
 - 看板协作：阶段、任务拖拽、任务详情、负责人、关注人、子任务、评论和活动日志。
 - 周期计划：周期待办、执行记录、本期手动生成看板任务和执行记录跳转。
 - 工作台和统计：个人工作台、平台总览、项目健康、任务趋势、成员负载和活动热力数据。
-- 日历视图：聚合任务截止、周期计划执行时间、周期计划截止时间和未读通知。
+- 日历视图：月/周/日视图聚合任务与周期计划，跨天任务按月/周连续色块展示，周视图展示负责人（无负责人时显示创建人），日视图展示任务描述，并支持在日历内快速新建任务。
 - 通知提醒：站内通知中心、未读数、WebSocket 刷新信号、任务到期/逾期/完成通知和邮件提醒开关。
+- 企业微信推送：项目日报、每周五周报、半小时时间多选、消息预览、群消息推送和发送记录。
 - 文件协作：项目文件、任务附件、文件上传下载和阿里云 OSS 存储。
 
 ## 技术栈
@@ -44,8 +45,9 @@ TeamSync 是一个面向团队协作和项目推进的项目管理系统，包�
 ├── TeamSync/          # Spring Boot 后端工程
 ├── TeamSync_web/      # Vue / Vite 前端工程
 ├── doc/               # 项目文档、数据库脚本和功能说明
-│   └── sql/           # PostgreSQL 表结构脚本
-└── scripts/           # 辅助脚本
+│   ├── sql/           # PostgreSQL 表结构脚本
+│   └── db-backup/     # 数据库结构备份产物
+└── scripts/           # 启动、备份等运维脚本
 ```
 
 重点文档：
@@ -53,6 +55,7 @@ TeamSync 是一个面向团队协作和项目推进的项目管理系统，包�
 - `doc/项目开发基线.md`：当前工程边界、接口、表结构、模块状态和验证命令。
 - `doc/重点文件位置索引.md`：按功能模块定位后端、前端和 SQL 文件。
 - `doc/站内通知功能说明.md`：站内通知中心、接口和路由维护口径。
+- `doc/企业微信推送配置说明.md`：群消息推送接入、数据库增量脚本、环境变量和统计口径。
 - `doc/阿里云OSS配置说明.md`：OSS 环境变量、Bucket 配置和验证方式。
 - `doc/未来功能规划.md`：后续功能规划和已知缺口。
 
@@ -113,6 +116,7 @@ CREATE SCHEMA IF NOT EXISTS teamsync;
 - `pm_task_reminder_log.sql`
 - `sys_user_reminder_setting.sql`
 - `sys_notification.sql`
+- `wecom_push.sql`（企业微信推送新增表，启用前执行）
 
 ## 启动后端
 
@@ -131,15 +135,55 @@ pnpm install
 pnpm dev
 ```
 
-当前 `TeamSync_web/.env` 默认使用：
+当前 `TeamSync_web/.env` 实际使用的接口配置为：
 
 ```text
 VITE_ACCESS_MODE=frontend
 VITE_API_URL=/api
-VITE_API_PROXY_URL=http://127.0.0.1:8080
+VITE_API_PROXY_URL=http://192.168.8.6:8080
 ```
 
-也就是说，浏览器访问前端开发服务器，接口请求通过 Vite 代理到本地 Java 后端。
+也就是说，直接执行 `pnpm dev` 时，浏览器请求的 `/api` 会被 Vite 代理到内网远端的后端 `192.168.8.6:8080`。要改成连本机后端，用 `start-frontend.sh` 的 `API_PROXY` 覆盖，或修改 `.env` 中的 `VITE_API_PROXY_URL`。
+
+## 一键启动（前后端）
+
+`scripts` 目录提供启动脚本，默认按本机开发形态运行：后端 `127.0.0.1:8080`，前端 `127.0.0.1:8081`，前端 `/api` 代理指向本机后端。
+
+```bash
+./scripts/start-all.sh            # 编译打包并启动后端，随后启动前端
+./scripts/start-all.sh status     # 前后端状态 + 数据库端口连通性
+./scripts/start-all.sh logs       # 同时跟踪前后端日志
+./scripts/start-all.sh stop       # 全部停止
+```
+
+单独操作：
+
+```bash
+./scripts/start-backend.sh start|restart|stop|status|logs
+./scripts/start-frontend.sh start|restart|stop|status|logs
+```
+
+前端脚本通过环境变量 `API_PROXY` 控制代理目标（默认 `http://127.0.0.1:8080`），需要直连远端后端时：
+
+```bash
+API_PROXY=http://192.168.8.6:8080 ./scripts/start-all.sh
+```
+
+可覆盖变量：`PORT`（后端端口）、`FRONTEND_PORT`（前端端口）、`DB_URL`、`CLEAN=1`（全量打包）、`SKIP_TESTS=0`、`JAVA_OPTS`、`OPEN=0`（不自动打开浏览器）。
+
+## 数据库结构备份
+
+数据库当前不在本机：`TeamSync/src/main/resources/application.yml` 的默认连接串指向内网远端主机 `192.168.8.6:5433`（Docker 内的 PostgreSQL 17，schema `teamsync`），本机需要先连上该内网或 VPN 才能访问。
+
+只备份结构、不导出数据：
+
+```bash
+./scripts/backup-teamsync-schema.sh
+```
+
+- 产物：`doc/db-backup/teamsync_schema_<时间戳>.sql`，以及同名 `.meta.txt`（来源、服务端版本、表数、sha256）。
+- 实现：`pg_dump --schema-only --schema=teamsync --no-owner --no-privileges`，脚本结尾校验文件中不存在 `COPY` / `INSERT` 数据段，命中即判失败。
+- 恢复示例：`psql -h 127.0.0.1 -p 5432 -d postgres -f doc/db-backup/teamsync_schema_<时间戳>.sql`
 
 ## 构建和验证
 

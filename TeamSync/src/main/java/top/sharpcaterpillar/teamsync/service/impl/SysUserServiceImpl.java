@@ -12,8 +12,14 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import top.sharpcaterpillar.teamsync.config.TaskReminderMailProperties;
 import top.sharpcaterpillar.teamsync.dto.*;
+import top.sharpcaterpillar.teamsync.entity.PmProjectMember;
+import top.sharpcaterpillar.teamsync.entity.PmRecurringPlanAssignee;
+import top.sharpcaterpillar.teamsync.entity.PmTaskMember;
 import top.sharpcaterpillar.teamsync.entity.SysUser;
 import top.sharpcaterpillar.teamsync.entity.SysUserReminderSetting;
+import top.sharpcaterpillar.teamsync.mapper.PmProjectMemberMapper;
+import top.sharpcaterpillar.teamsync.mapper.PmRecurringPlanAssigneeMapper;
+import top.sharpcaterpillar.teamsync.mapper.PmTaskMemberMapper;
 import top.sharpcaterpillar.teamsync.mapper.SysUserMapper;
 import top.sharpcaterpillar.teamsync.mapper.SysUserReminderSettingMapper;
 import top.sharpcaterpillar.teamsync.service.SysUserService;
@@ -46,6 +52,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private static final String SALT = "TeamSync2026";
 
     private final SysUserReminderSettingMapper reminderSettingMapper;
+    private final PmProjectMemberMapper projectMemberMapper;
+    private final PmTaskMemberMapper taskMemberMapper;
+    private final PmRecurringPlanAssigneeMapper recurringPlanAssigneeMapper;
     private final TaskReminderService taskReminderService;
     private final TaskReminderMailProperties taskReminderMailProperties;
 
@@ -287,6 +296,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new RuntimeException("不能删除管理员用户");
         }
 
+        // 4. 清理该用户的历史关联数据，避免项目成员/任务成员等出现无主残留
+        cleanupUserReferences(id);
+
         boolean result = this.removeById(id);
         log.info("删除用户成功: userId={}", id);
         return result;
@@ -422,6 +434,24 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     private String encryptPassword(String password) {
         return DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+    }
+
+    private void cleanupUserReferences(Long userId) {
+        LambdaQueryWrapper<PmProjectMember> projectMemberQuery = new LambdaQueryWrapper<>();
+        projectMemberQuery.eq(PmProjectMember::getUserId, userId);
+        projectMemberMapper.delete(projectMemberQuery);
+
+        LambdaQueryWrapper<PmTaskMember> taskMemberQuery = new LambdaQueryWrapper<>();
+        taskMemberQuery.eq(PmTaskMember::getUserId, userId);
+        taskMemberMapper.delete(taskMemberQuery);
+
+        LambdaQueryWrapper<PmRecurringPlanAssignee> recurringAssigneeQuery = new LambdaQueryWrapper<>();
+        recurringAssigneeQuery.eq(PmRecurringPlanAssignee::getUserId, userId);
+        recurringPlanAssigneeMapper.delete(recurringAssigneeQuery);
+
+        if (reminderSettingMapper.selectById(userId) != null) {
+            reminderSettingMapper.deleteById(userId);
+        }
     }
 
     private SysUser requireUser(Long userId) {

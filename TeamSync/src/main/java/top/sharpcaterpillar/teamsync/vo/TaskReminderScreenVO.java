@@ -7,6 +7,8 @@ import java.util.List;
  */
 public class TaskReminderScreenVO {
 
+    /** 生成数据时的服务器时间，格式 yyyy-MM-ddTHH:mm:ss，供大屏校准倒计时 */
+    private String serverTime;
     private List<KpiCardItemVO> summaryCards;
     private List<KpiCardItemVO> managementSnapshotCards;
     private List<UrgentTaskItemVO> urgentTasks;
@@ -19,8 +21,14 @@ public class TaskReminderScreenVO {
     private List<CollaborationReminderItemVO> collaborationReminders;
     private List<KpiCardItemVO> sevenDaySummaryCards;
     private List<CalendarDayItemVO> sevenDayCalendar;
-    private List<DailyFocusItemVO> dailyFocus;
-    private List<ProjectMilestoneItemVO> milestoneCards;
+
+    public String getServerTime() {
+        return serverTime;
+    }
+
+    public void setServerTime(String serverTime) {
+        this.serverTime = serverTime;
+    }
 
     public List<KpiCardItemVO> getSummaryCards() {
         return summaryCards;
@@ -118,22 +126,6 @@ public class TaskReminderScreenVO {
         this.sevenDayCalendar = sevenDayCalendar;
     }
 
-    public List<DailyFocusItemVO> getDailyFocus() {
-        return dailyFocus;
-    }
-
-    public void setDailyFocus(List<DailyFocusItemVO> dailyFocus) {
-        this.dailyFocus = dailyFocus;
-    }
-
-    public List<ProjectMilestoneItemVO> getMilestoneCards() {
-        return milestoneCards;
-    }
-
-    public void setMilestoneCards(List<ProjectMilestoneItemVO> milestoneCards) {
-        this.milestoneCards = milestoneCards;
-    }
-
     public record KpiCardItemVO(String id,
                                 String label,
                                 Integer value,
@@ -150,6 +142,8 @@ public class TaskReminderScreenVO {
                                    String priority,
                                    String priorityLevel,
                                    String remainingTime,
+                                   /** 绝对截止时间，前端据此做秒级倒计时 */
+                                   String dueTime,
                                    String status) {
     }
 
@@ -157,12 +151,16 @@ public class TaskReminderScreenVO {
                                      String time,
                                      String taskName,
                                      String countdownText,
-                                     String status) {
+                                     /** 绝对截止时间，前端据此做秒级倒计时 */
+                                     String dueTime,
+                                     String status,
+                                     Boolean done) {
     }
 
     public record ProjectRiskItemVO(Long id,
                                     String projectName,
                                     Integer progress,
+                                    Integer pendingTaskCount,
                                     Integer overdueTaskCount,
                                     String riskLevel,
                                     String riskText) {
@@ -221,23 +219,5 @@ public class TaskReminderScreenVO {
                                     String dateText,
                                     List<CalendarTaskChipItemVO> tasks,
                                     Integer totalCount) {
-    }
-
-    public record DailyFocusItemVO(Long id,
-                                   String dateText,
-                                   String taskName,
-                                   String assigneeName,
-                                   String countdownText,
-                                   String status) {
-    }
-
-    public record ProjectMilestoneItemVO(Long id,
-                                         String projectName,
-                                         String milestoneName,
-                                         String expectedDate,
-                                         Integer readiness,
-                                         String riskLevel,
-                                         String riskText,
-                                         String tone) {
     }
 }

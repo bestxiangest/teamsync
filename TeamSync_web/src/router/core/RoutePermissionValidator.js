@@ -96,4 +96,3 @@ export class RoutePermissionValidator {
         return { path: homePath, hasPermission: false };
     }
 }
-//# sourceMappingURL=RoutePermissionValidator.js.map

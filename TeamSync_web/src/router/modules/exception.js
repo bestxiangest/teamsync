@@ -43,4 +43,3 @@ export const exceptionRoutes = {
         }
     ]
 };
-//# sourceMappingURL=exception.js.map

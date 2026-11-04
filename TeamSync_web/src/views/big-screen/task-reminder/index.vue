@@ -1,231 +1,128 @@
 <template>
-  <main class="task-reminder-screen" @mouseenter="pauseCarousel" @mouseleave="resumeCarousel">
-    <ScreenHeader
-      :page-title="currentPage.title"
-      :page-index="currentPageIndex"
-      :page-total="pages.length"
-      :now="currentTime"
-    />
+  <div class="ts-screen" :class="{ 'ts-screen--idle': idle }">
+    <div class="ts-screen__stage" :style="stageStyle">
+      <ScreenTopBar
+        :decks="decks"
+        :active-index="activeIndex"
+        :progress="progress"
+        :now="now"
+        :paused="paused"
+        @select="jumpTo"
+        @toggle-play="paused = !paused"
+        @toggle-fullscreen="toggleFullscreen"
+        @refresh="refresh"
+        @exit="exitScreen"
+      />
 
-    <button class="screen-exit-button" type="button" @click="exitScreen">退出</button>
+      <AlertRail v-if="overdueTasks.length > 0" :tasks="overdueTasks" />
 
-    <section class="task-reminder-screen__stage">
-      <Transition :name="transitionName" mode="out-in">
-        <component
-          :is="currentPage.component"
-          :key="currentPage.key"
-          :data="displayScreenData"
-          class="task-reminder-screen__page"
-          @open-detail="openDetailDialog"
-        />
-      </Transition>
-    </section>
+      <main class="ts-screen__deck">
+        <Transition name="deck" mode="out-in">
+          <DeckToday
+            v-if="activeIndex === 0"
+            key="today"
+            :data="data"
+            :backlog="backlogSegments"
+            :health="health"
+            @detail="detailOpen = $event"
+          />
+          <DeckTeam
+            v-else-if="activeIndex === 1"
+            key="team"
+            :data="data"
+            @detail="detailOpen = $event"
+          />
+          <DeckOutlook
+            v-else
+            key="outlook"
+            :data="data"
+            :trend="weekTrend"
+            @detail="detailOpen = $event"
+          />
+        </Transition>
+      </main>
 
-    <div class="screen-indicator" aria-label="页面轮播状态">
-      <span
-        v-for="(page, index) in pages"
-        :key="page.key"
-        role="button"
-        tabindex="0"
-        class="screen-indicator__dot"
-        :class="{ 'screen-indicator__dot--active': index === currentPageIndex }"
-        :aria-label="`切换到${page.title}`"
-        @click="handleIndicatorClick(index)"
-        @keydown.enter.prevent="handleIndicatorClick(index)"
-        @keydown.space.prevent="handleIndicatorClick(index)"
-      ></span>
-      <span class="screen-indicator__text">
-        {{ isCarouselPaused ? '鼠标悬停，轮播已暂停' : '20 秒自动切换 · 60 秒刷新数据' }}
-      </span>
+      <ScreenBottomBar :last-sync-at="lastSyncAt" :sync-failed="syncFailed" />
     </div>
-
-    <ScreenDetailDialog
-      v-model="detailDialogVisible"
-      :title="detailDialog.title"
-      :type="detailDialog.type"
-      :data="displayScreenData"
-      @closed="resumeCarousel"
-    />
-  </main>
+  </div>
 </template>
 
 <script setup lang="ts">
-  import { computed, onMounted, onUnmounted, ref } from 'vue'
-  import type { Component } from 'vue'
+  import { onBeforeUnmount, onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import {
-    getTaskReminderScreenData,
-    mockTaskReminderScreenData,
-    type TaskReminderScreenData
-  } from '@/api/big-screen'
-  import PageAssigneeWall from './components/PageAssigneeWall.vue'
-  import PageOverview from './components/PageOverview.vue'
-  import PageSevenDays from './components/PageSevenDays.vue'
-  import ScreenHeader from './components/ScreenHeader.vue'
-  import ScreenDetailDialog from './components/ScreenDetailDialog.vue'
-  import type { ScreenDetailRequest } from './components/detail-dialog'
+  import '@fontsource/manrope/latin-500.css'
+  import '@fontsource/manrope/latin-700.css'
+  import '@fontsource/manrope/latin-800.css'
+  import AlertRail from './components/AlertRail.vue'
+  import ScreenBottomBar from './components/ScreenBottomBar.vue'
+  import ScreenTopBar from './components/ScreenTopBar.vue'
+  import { useAutoFit } from './composables/useAutoFit'
+  import { useScreenData } from './composables/useScreenData'
+  import DeckOutlook from './decks/DeckOutlook.vue'
+  import DeckTeam from './decks/DeckTeam.vue'
+  import DeckToday from './decks/DeckToday.vue'
+  import type { DeckConfig } from './types'
 
-  interface ScreenPageConfig {
-    key: string
-    title: string
-    component: Component
-  }
+  /** 单页停留时长 */
+  const ROTATE_MS = 22_000
+  const TICK_MS = 120
+  /** 鼠标静止多久后隐藏操作按钮 */
+  const IDLE_MS = 5_000
 
-  const CAROUSEL_INTERVAL = 20_000
-  const DATA_REFRESH_INTERVAL = 60_000
   const router = useRouter()
+  const { stageStyle } = useAutoFit()
+  const {
+    data,
+    backlogSegments,
+    health,
+    overdueTasks,
+    weekTrend,
+    now,
+    lastSyncAt,
+    syncFailed,
+    refresh
+  } = useScreenData()
 
-  const pages: ScreenPageConfig[] = [
-    {
-      key: 'overview',
-      title: '今日任务总览',
-      component: PageOverview
-    },
-    {
-      key: 'assignee-wall',
-      title: '责任人待办墙',
-      component: PageAssigneeWall
-    },
-    {
-      key: 'seven-days',
-      title: '未来 7 日提醒',
-      component: PageSevenDays
-    }
+  const decks: DeckConfig[] = [
+    { key: 'today', title: '今日战情' },
+    { key: 'team', title: '团队负载' },
+    { key: 'outlook', title: '七日前瞻' }
   ]
 
-  const screenData = ref<TaskReminderScreenData>(mockTaskReminderScreenData)
-  const currentPageIndex = ref(0)
-  const currentTime = ref(new Date())
-  const transitionName = ref('screen-slide-next')
-  const isCarouselPaused = ref(false)
-  const detailDialogVisible = ref(false)
-  const detailDialog = ref<ScreenDetailRequest>({
-    type: 'urgentTasks',
-    title: '全部高优先级任务'
-  })
+  const activeIndex = ref(0)
+  const progress = ref(0)
+  const paused = ref(false)
+  const idle = ref(false)
+  /** 某个面板的明细弹层是否展开：展开期间不轮播，否则弹层会被整页切换卸载 */
+  const detailOpen = ref(false)
 
-  let carouselTimer: ReturnType<typeof setInterval> | null = null
-  let dataRefreshTimer: ReturnType<typeof setInterval> | null = null
-  let timeTimer: ReturnType<typeof setInterval> | null = null
+  let elapsed = 0
+  let lastTickAt = performance.now()
+  let lastActivityAt = Date.now()
+  let rotateTimer: ReturnType<typeof setInterval> | null = null
+  let idleTimer: ReturnType<typeof setInterval> | null = null
 
-  const currentPage = computed(() => pages[currentPageIndex.value])
-
-  const HIDDEN_PERSON_NAME = 'zzn'
-
-  const isHiddenPerson = (name: string | null | undefined) =>
-    name?.trim().toLowerCase() === HIDDEN_PERSON_NAME
-
-  const sanitizePersonList = (value: string | null | undefined) => {
-    const names = (value ?? '')
-      .split(/\s*(?:\/|,|，|、)\s*/)
-      .map((name) => name.trim())
-      .filter(Boolean)
-
-    return names.filter((name) => !isHiddenPerson(name)).join(' / ')
+  const jumpTo = (index: number) => {
+    activeIndex.value = (index + decks.length) % decks.length
+    elapsed = 0
+    lastTickAt = performance.now()
+    progress.value = 0
   }
 
-  const hideDeveloperFromScreenData = (data: TaskReminderScreenData): TaskReminderScreenData => {
-    const urgentTasks = data.urgentTasks
-      .map((task) => ({ ...task, assigneeName: sanitizePersonList(task.assigneeName) }))
-      .filter((task) => task.assigneeName)
-    const recurringPlans = data.recurringPlans
-      .map((plan) => ({ ...plan, assigneeName: sanitizePersonList(plan.assigneeName) }))
-      .filter((plan) => plan.assigneeName)
-    const dailyFocus = data.dailyFocus
-      .map((item) => ({ ...item, assigneeName: sanitizePersonList(item.assigneeName) }))
-      .filter((item) => item.assigneeName)
-    const collaborationReminders = data.collaborationReminders
-      .map((item) => ({ ...item, people: sanitizePersonList(item.people) }))
-      .filter((item) => item.people)
-
-    return {
-      ...data,
-      urgentTasks,
-      recurringPlans,
-      dailyFocus,
-      collaborationReminders,
-      assigneeWall: data.assigneeWall.filter((assignee) => !isHiddenPerson(assignee.name)),
-      workloadRanking: data.workloadRanking
-        .filter((rank) => !isHiddenPerson(rank.name))
-        .map((rank, index) => ({ ...rank, rank: index + 1 }))
-    }
-  }
-
-  const displayScreenData = computed(() => hideDeveloperFromScreenData(screenData.value))
-
-  const stopCarousel = () => {
-    if (carouselTimer) {
-      clearInterval(carouselTimer)
-      carouselTimer = null
-    }
-  }
-
-  const startCarousel = () => {
-    stopCarousel()
-    if (isCarouselPaused.value) {
+  const toggleFullscreen = () => {
+    if (document.fullscreenElement) {
+      void document.exitFullscreen()
       return
     }
 
-    carouselTimer = setInterval(() => {
-      goToPage(currentPageIndex.value + 1, 'next', false)
-    }, CAROUSEL_INTERVAL)
-  }
-
-  const goToPage = (
-    targetIndex: number,
-    direction: 'next' | 'prev',
-    restartTimer: boolean = true
-  ) => {
-    const normalizedIndex = (targetIndex + pages.length) % pages.length
-    transitionName.value = direction === 'next' ? 'screen-slide-next' : 'screen-slide-prev'
-    currentPageIndex.value = normalizedIndex
-
-    if (restartTimer) {
-      startCarousel()
-    }
-  }
-
-  const handleIndicatorClick = (targetIndex: number) => {
-    if (targetIndex === currentPageIndex.value) {
-      return
-    }
-
-    const direction = targetIndex > currentPageIndex.value ? 'next' : 'prev'
-    goToPage(targetIndex, direction)
-  }
-
-  const pauseCarousel = () => {
-    isCarouselPaused.value = true
-    stopCarousel()
-  }
-
-  const resumeCarousel = () => {
-    if (detailDialogVisible.value) {
-      return
-    }
-
-    isCarouselPaused.value = false
-    startCarousel()
-  }
-
-  const openDetailDialog = (payload: ScreenDetailRequest) => {
-    detailDialog.value = {
-      type: payload.type,
-      title: payload.title
-    }
-    detailDialogVisible.value = true
-    pauseCarousel()
-  }
-
-  const refreshData = async () => {
-    try {
-      screenData.value = await getTaskReminderScreenData()
-    } catch (error) {
-      console.error('[TaskReminderScreen] 刷新大屏数据失败:', error)
-    }
+    void document.documentElement.requestFullscreen?.()
   }
 
   const exitScreen = () => {
+    if (document.fullscreenElement) {
+      void document.exitFullscreen()
+    }
+
     if (window.opener && !window.opener.closed) {
       window.close()
       return
@@ -240,194 +137,202 @@
   }
 
   const handleKeydown = (event: KeyboardEvent) => {
-    if (event.key === 'ArrowRight') {
-      event.preventDefault()
-      goToPage(currentPageIndex.value + 1, 'next')
+    const deckShortcut = Number(event.key)
+
+    if (deckShortcut >= 1 && deckShortcut <= decks.length) {
+      jumpTo(deckShortcut - 1)
       return
     }
 
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault()
-      goToPage(currentPageIndex.value - 1, 'prev')
+    switch (event.key) {
+      case 'ArrowRight':
+        event.preventDefault()
+        jumpTo(activeIndex.value + 1)
+        break
+      case 'ArrowLeft':
+        event.preventDefault()
+        jumpTo(activeIndex.value - 1)
+        break
+      case ' ':
+        event.preventDefault()
+        paused.value = !paused.value
+        break
+      case 'f':
+      case 'F':
+        toggleFullscreen()
+        break
+      case 'r':
+      case 'R':
+        void refresh()
+        break
+      case 'Escape':
+        if (!document.fullscreenElement) {
+          exitScreen()
+        }
+        break
+      default:
+        break
     }
   }
 
-  onMounted(() => {
-    void refreshData()
+  const handleActivity = () => {
+    lastActivityAt = Date.now()
+    idle.value = false
+  }
 
-    timeTimer = setInterval(() => {
-      currentTime.value = new Date()
+  onMounted(() => {
+    lastTickAt = performance.now()
+
+    rotateTimer = setInterval(() => {
+      const tickAt = performance.now()
+      const delta = Math.min(tickAt - lastTickAt, 1000)
+      lastTickAt = tickAt
+
+      /** 页面不可见时浏览器会节流定时器，回到前台不该突然连翻几页 */
+      if (document.visibilityState === 'hidden' || paused.value || detailOpen.value) {
+        return
+      }
+
+      elapsed += delta
+
+      if (elapsed >= ROTATE_MS) {
+        elapsed %= ROTATE_MS
+        activeIndex.value = (activeIndex.value + 1) % decks.length
+      }
+
+      progress.value = Math.min(elapsed / ROTATE_MS, 1)
+    }, TICK_MS)
+
+    idleTimer = setInterval(() => {
+      idle.value = Date.now() - lastActivityAt > IDLE_MS
     }, 1000)
 
-    dataRefreshTimer = setInterval(() => {
-      void refreshData()
-    }, DATA_REFRESH_INTERVAL)
-
-    startCarousel()
     window.addEventListener('keydown', handleKeydown)
+    window.addEventListener('mousemove', handleActivity)
   })
 
-  onUnmounted(() => {
-    stopCarousel()
-
-    if (timeTimer) {
-      clearInterval(timeTimer)
-      timeTimer = null
+  onBeforeUnmount(() => {
+    if (rotateTimer) {
+      clearInterval(rotateTimer)
+      rotateTimer = null
     }
 
-    if (dataRefreshTimer) {
-      clearInterval(dataRefreshTimer)
-      dataRefreshTimer = null
+    if (idleTimer) {
+      clearInterval(idleTimer)
+      idleTimer = null
     }
 
     window.removeEventListener('keydown', handleKeydown)
+    window.removeEventListener('mousemove', handleActivity)
   })
 </script>
 
 <style scoped lang="scss">
-  .task-reminder-screen {
-    --screen-bg: #f5f7fb;
-    --card-bg: #ffffff;
-    --border-color: #e5eaf3;
-    --text-primary: #0f172a;
-    --text-secondary: #64748b;
-    --primary: #2563eb;
-    --danger: #ef4444;
-    --warning: #f97316;
-    --success: #16a34a;
-    --purple: #7c3aed;
-    --screen-shadow: 0 8px 22px rgb(15 23 42 / 5%);
+  .ts-screen {
+    --ts-bg: #eef2f7;
+    --ts-inset: #fff;
+    --ts-line: rgb(15 23 42 / 8%);
+    --ts-line-2: rgb(15 23 42 / 14%);
+    --ts-ink: #0f172a;
+    --ts-ink-2: #475569;
+    --ts-ink-3: #94a3b8;
+    --ts-cyan: #0891b2;
+    --ts-cyan-soft: rgb(8 145 178 / 12%);
+    --ts-cyan-line: rgb(8 145 178 / 28%);
+    --ts-indigo: #4f46e5;
+    --ts-indigo-soft: rgb(79 70 229 / 12%);
+    --ts-indigo-line: rgb(79 70 229 / 28%);
+    --ts-amber: #d97706;
+    --ts-amber-soft: rgb(217 119 6 / 12%);
+    --ts-amber-line: rgb(217 119 6 / 28%);
+    --ts-rose: #e11d48;
+    --ts-rose-soft: rgb(225 29 72 / 12%);
+    --ts-rose-line: rgb(225 29 72 / 28%);
+    --ts-emerald: #059669;
+    --ts-emerald-soft: rgb(5 150 105 / 12%);
+    --ts-emerald-line: rgb(5 150 105 / 28%);
+    --ts-violet: #7c3aed;
+    --ts-violet-soft: rgb(124 58 237 / 12%);
+    --ts-violet-line: rgb(124 58 237 / 28%);
+    --ts-controls-opacity: 1;
 
-    display: grid;
-    width: 100vw;
-    height: 100vh;
-    grid-template-rows: auto minmax(0, 1fr) 22px;
-    gap: 14px;
-    padding: 22px 28px 14px;
-    overflow: hidden;
-    color: var(--text-primary);
-    font-family:
-      -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: var(--screen-bg);
-  }
-
-  .task-reminder-screen__stage {
-    position: relative;
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .task-reminder-screen__page {
-    min-width: 0;
-    min-height: 0;
-  }
-
-  .screen-exit-button {
     position: fixed;
-    right: 28px;
-    bottom: 42px;
-    z-index: 2600;
-    height: 30px;
-    padding: 0 14px;
-    color: #334155;
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    background: #fff;
-    border: 1px solid var(--border-color);
-    border-radius: 999px;
-    box-shadow: 0 8px 18px rgb(15 23 42 / 9%);
-    transition:
-      color 160ms ease,
-      border-color 160ms ease,
-      transform 160ms ease;
+    inset: 0;
+    z-index: 3000;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    font-family:
+      Manrope,
+      -apple-system,
+      'PingFang SC',
+      'Microsoft YaHei',
+      sans-serif;
+    color: var(--ts-ink);
+    color-scheme: light;
+    background:
+      radial-gradient(1200px 720px at 10% -12%, rgb(99 102 241 / 10%), transparent 62%),
+      radial-gradient(1100px 820px at 94% 112%, rgb(34 211 238 / 10%), transparent 64%),
+      var(--ts-bg);
   }
 
-  .screen-exit-button:hover {
-    color: var(--primary);
-    border-color: #bfdbfe;
-    transform: translateY(-1px);
+  /* 底纹网格与四周压暗，让面板从背景里浮出来 */
+  .ts-screen::before,
+  .ts-screen::after {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: '';
   }
 
-  .screen-indicator {
+  .ts-screen::before {
+    background-image:
+      linear-gradient(rgb(15 23 42 / 4%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(15 23 42 / 4%) 1px, transparent 1px);
+    background-size: 58px 58px;
+  }
+
+  .ts-screen::after {
+    background: radial-gradient(125% 95% at 50% 50%, transparent 52%, rgb(15 23 42 / 8%) 100%);
+  }
+
+  .ts-screen--idle {
+    --ts-controls-opacity: 0;
+    --ts-controls-events: none;
+  }
+
+  .ts-screen__stage {
+    position: relative;
+    z-index: 1;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 700;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 26px;
+    transform-origin: center center;
   }
 
-  .screen-indicator__dot {
-    width: 8px;
-    height: 8px;
-    padding: 0;
-    cursor: pointer;
-    background: #cbd5e1;
-    border: 0;
-    border-radius: 50%;
+  .ts-screen__deck {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .deck-enter-active,
+  .deck-leave-active {
     transition:
-      width 180ms ease,
-      background-color 180ms ease,
-      transform 180ms ease;
+      opacity 320ms ease,
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .screen-indicator__dot:hover {
-    background: #93c5fd;
-    transform: translateY(-1px);
-  }
-
-  .screen-indicator__dot--active {
-    width: 22px;
-    background: var(--primary);
-    border-radius: 999px;
-  }
-
-  .screen-indicator__text {
-    margin-left: 4px;
-    white-space: nowrap;
-  }
-
-  .screen-slide-next-enter-active,
-  .screen-slide-next-leave-active,
-  .screen-slide-prev-enter-active,
-  .screen-slide-prev-leave-active {
-    transition:
-      opacity 260ms ease,
-      transform 260ms ease;
-  }
-
-  .screen-slide-next-enter-from {
+  .deck-enter-from {
     opacity: 0;
-    transform: translateX(18px);
+    transform: translateY(16px);
   }
 
-  .screen-slide-next-leave-to {
+  .deck-leave-to {
     opacity: 0;
-    transform: translateX(-18px);
-  }
-
-  .screen-slide-prev-enter-from {
-    opacity: 0;
-    transform: translateX(-18px);
-  }
-
-  .screen-slide-prev-leave-to {
-    opacity: 0;
-    transform: translateX(18px);
-  }
-
-  @media (max-width: 1500px) {
-    .task-reminder-screen {
-      grid-template-rows: auto minmax(0, 1fr) 18px;
-      gap: 10px;
-      padding: 14px 18px 10px;
-    }
-
-    .screen-indicator {
-      font-size: 11px;
-    }
+    transform: translateY(-16px);
   }
 </style>

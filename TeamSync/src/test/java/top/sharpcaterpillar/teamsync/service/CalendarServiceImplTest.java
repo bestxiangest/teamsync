@@ -28,7 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 class CalendarServiceImplTest {
@@ -64,7 +63,7 @@ class CalendarServiceImplTest {
     }
 
     @Test
-    void defaultsToIncompleteStatusesAndExtendsOverdueTasks() {
+    void defaultsToIncompleteStatusesAndEndsOverdueTasksAtTheirDeadline() {
         LocalDate today = LocalDate.now();
         LocalDateTime fallbackCreatedAt = today.minusDays(3).atTime(9, 0);
         PmTask scheduled = task(
@@ -101,7 +100,7 @@ class CalendarServiceImplTest {
         assertThat(events).filteredOn(CalendarEventVO::getOverdue).singleElement().satisfies(event -> {
             assertThat(event.getStartTime()).isEqualTo(fallbackCreatedAt);
             assertThat(event.getDueTime()).isEqualTo(overdue.getDueTime());
-            assertThat(event.getEndTime()).isEqualTo(today.plusDays(3).atStartOfDay().minusNanos(1));
+            assertThat(event.getEndTime()).isEqualTo(overdue.getDueTime());
         });
     }
 
@@ -239,7 +238,6 @@ class CalendarServiceImplTest {
 
         List<CalendarEventVO> events = calendarService.listEvents(request, 10L);
 
-        verify(taskMemberMapper).selectList(any(Wrapper.class));
         assertThat(events).extracting(CalendarEventVO::getTitle).containsExactly("自己的任务");
     }
 
@@ -255,7 +253,6 @@ class CalendarServiceImplTest {
 
         List<CalendarEventVO> events = calendarService.listEvents(request, 10L);
 
-        verifyNoInteractions(taskMemberMapper);
         assertThat(events).extracting(CalendarEventVO::getTitle)
                 .containsExactlyInAnyOrder("自己的任务", "其他人的任务");
     }
@@ -274,7 +271,6 @@ class CalendarServiceImplTest {
 
         List<CalendarEventVO> events = calendarService.listEvents(request, 20L);
 
-        verify(taskMemberMapper).selectList(any(Wrapper.class));
         assertThat(events).extracting(CalendarEventVO::getTitle).containsExactly("自己的任务");
     }
 
@@ -301,6 +297,35 @@ class CalendarServiceImplTest {
         assertThat(calendarService.listEvents(adminRequest, 10L))
                 .extracting(CalendarEventVO::getTitle)
                 .containsExactlyInAnyOrder("执行：自己的计划", "执行：其他人的计划");
+    }
+
+    @Test
+    void includesDeadlineDayWhenTaskWasCreatedAfterItsDeadlineWithoutAStartTime() {
+        LocalDate today = LocalDate.now();
+        PmTask task = task(1L, "当天零点截止", 0, null, today.atStartOfDay(), today.atTime(15, 0));
+        when(taskMapper.selectList(any(Wrapper.class))).thenReturn(List.of(task));
+
+        assertThat(calendarService.listEvents(taskRequest(today, today), 10L)).singleElement().satisfies(event -> {
+            assertThat(event.getStartTime()).isEqualTo(task.getDueTime());
+            assertThat(event.getEndTime()).isEqualTo(task.getDueTime());
+        });
+    }
+
+    @Test
+    void includesTaskDescriptionCreatorAndExecutorNames() {
+        LocalDate today = LocalDate.now();
+        PmTask task = task(1L, "任务详情", 0, today.atTime(9, 0), today.atTime(18, 0), today.atTime(8, 0));
+        task.setDescription("任务说明");
+        when(taskMapper.selectList(any(Wrapper.class))).thenReturn(List.of(task));
+        when(taskMemberMapper.selectList(any(Wrapper.class))).thenReturn(List.of(taskMember(1L, 20L)));
+        when(sysUserService.listByIds(any())).thenReturn(List.of(user(10L, "创建人", "owner"), user(20L, "执行人", "executor")));
+
+        assertThat(calendarService.listEvents(taskRequest(today, today), 10L)).singleElement().satisfies(event -> {
+            assertThat(event.getDescription()).isEqualTo("任务说明");
+            assertThat(event.getCreatorId()).isEqualTo(10L);
+            assertThat(event.getCreatorName()).isEqualTo("创建人");
+            assertThat(event.getAssignees()).extracting(AssigneeVO::getNickname).containsExactly("执行人");
+        });
     }
 
     private static CalendarEventQueryRequest taskRequest(LocalDate startDate, LocalDate endDate) {

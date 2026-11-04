@@ -144,4 +144,3 @@ export class RouteValidator {
         return [parent.replace(/\/$/, ''), child.replace(/^\//, '')].filter(Boolean).join('/');
     }
 }
-//# sourceMappingURL=RouteValidator.js.map

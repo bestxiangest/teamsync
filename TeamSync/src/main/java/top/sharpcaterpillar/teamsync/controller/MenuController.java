@@ -75,6 +75,14 @@ public class MenuController {
         recurringPlanLegacy.setChildren(Arrays.asList(recurringPlanLegacyList));
         menus.add(recurringPlanLegacy);
 
+        MenuVO system = createMenu("System", "/system", "/index/index",
+                "系统管理", "ri:settings-3-line", Arrays.asList("R_SUPER", "R_ADMIN"));
+        MenuVO wecomPush = createChildMenu("WecomPush", "wecom-push", "/system/wecom-push",
+                "企业微信推送", "ri:wechat-line", false);
+        wecomPush.getMeta().setRoles(Arrays.asList("R_SUPER", "R_ADMIN"));
+        system.setChildren(Arrays.asList(wecomPush));
+        menus.add(system);
+
         return menus;
     }
 

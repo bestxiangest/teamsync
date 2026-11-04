@@ -45,6 +45,9 @@ aliyun:
     access-key-secret: ${OSS_ACCESS_KEY_SECRET:}
 
 teamsync:
+  wecom:
+    enabled: ${TEAMSYNC_WECOM_ENABLED:false}
+    encryption-key: ${TEAMSYNC_WECOM_ENCRYPTION_KEY:}
   mail:
     reminder:
       enabled: ${TEAMSYNC_MAIL_REMINDER_ENABLED:true}

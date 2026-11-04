@@ -109,6 +109,8 @@ public class CalendarServiceImpl implements CalendarService {
             ));
         }
 
+        attachCreatorNames(events);
+
         events.sort(Comparator
                 .comparing(CalendarEventVO::getStartTime, Comparator.nullsLast(Comparator.naturalOrder()))
                 .thenComparing(CalendarEventVO::getSourceType, Comparator.nullsLast(String::compareTo))
@@ -200,7 +202,16 @@ public class CalendarServiceImpl implements CalendarService {
             if (adminView && !assigneeIds.isEmpty() && !assignedTaskIds.contains(task.getId())) {
                 continue;
             }
-            LocalDateTime effectiveStart = task.getStartTime() == null ? task.getCreatedAt() : task.getStartTime();
+            LocalDateTime effectiveStart = task.getStartTime();
+            if (effectiveStart == null) {
+                effectiveStart = task.getCreatedAt();
+                // 无开始时间时，若创建时间晚于截止时间（例如当天 00:00 截止、下午才创建），
+                // 仍应覆盖截止日期当天，避免任务被过滤掉。
+                if (task.getDueTime() != null
+                        && (effectiveStart == null || task.getDueTime().isBefore(effectiveStart))) {
+                    effectiveStart = task.getDueTime();
+                }
+            }
             if (effectiveStart == null || !effectiveStart.isBefore(range.endExclusive())) {
                 continue;
             }
@@ -221,7 +232,9 @@ public class CalendarServiceImpl implements CalendarService {
                         ? task.getUpdatedAt()
                         : range.endExclusive().minusNanos(1);
             } else {
-                effectiveEnd = overdue ? range.endExclusive().minusNanos(1) : task.getDueTime();
+                // 逾期任务按截止时间结束，不再拉伸到整个查询区间末尾，
+                // 否则会出现「截止 11 月 4 日却显示到 12 月 6 日」的日历条。
+                effectiveEnd = task.getDueTime();
             }
             if (effectiveEnd.isBefore(effectiveStart) || effectiveEnd.isBefore(range.startAt())) {
                 continue;
@@ -229,17 +242,20 @@ public class CalendarServiceImpl implements CalendarService {
 
             PmProject project = projectMap.get(task.getProjectId());
             CalendarEventVO event = baseEvent(SOURCE_TASK, task.getId(), task.getTitle(), effectiveStart);
+            event.setDescription(task.getDescription());
             event.setEndTime(effectiveEnd);
             event.setDueTime(task.getDueTime());
             event.setStatus(task.getStatus() == null ? null : String.valueOf(task.getStatus()));
             event.setPriority(task.getPriority());
             event.setProjectId(task.getProjectId());
             event.setProjectName(project == null ? null : project.getName());
+            event.setCreatorId(task.getCreatorId());
             event.setOverdue(overdue);
             event.setColorType(resolveTaskColor(false, task.getStatus(), task.getPriority()));
             event.setTargetPath(boardPath(task.getProjectId(), task.getId()));
             events.add(event);
         }
+        attachTaskAssignees(events);
         return events;
     }
 
@@ -278,17 +294,159 @@ public class CalendarServiceImpl implements CalendarService {
             }
             PmProject project = projectMap.get(plan.getProjectId());
             CalendarEventVO event = baseEvent(SOURCE_RECURRING_PLAN_RUN, plan.getId(), "执行：" + plan.getTitle(), plan.getNextRunAt());
+            event.setDescription(plan.getDescription());
             event.setStatus(plan.getStatus());
             event.setPriority(plan.getPriority());
             event.setProjectId(plan.getProjectId());
             event.setProjectName(project == null ? null : project.getName());
+            event.setCreatorId(plan.getCreatorId());
             event.setDueTime(calculateNextDueTime(plan));
             event.setOverdue(false);
             event.setColorType("primary");
             event.setTargetPath(recurringPlanPath(plan.getId()));
             events.add(event);
         }
+        attachRecurringPlanAssignees(events);
         return events;
+    }
+
+    /**
+     * 批量补充任务负责人，避免日历事件逐条查询造成 N+1。
+     */
+    private void attachTaskAssignees(List<CalendarEventVO> events) {
+        Map<Long, CalendarEventVO> eventByTaskId = indexEvents(events);
+        if (eventByTaskId.isEmpty()) {
+            return;
+        }
+
+        LambdaQueryWrapper<PmTaskMember> query = new LambdaQueryWrapper<>();
+        query.in(PmTaskMember::getTaskId, eventByTaskId.keySet())
+                .eq(PmTaskMember::getRole, TASK_ROLE_EXECUTOR);
+        List<PmTaskMember> members = taskMemberMapper.selectList(query);
+        if (members.isEmpty()) {
+            return;
+        }
+
+        Set<Long> userIds = members.stream()
+                .map(PmTaskMember::getUserId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(HashSet::new));
+        Map<Long, SysUser> userMap = loadUserMap(userIds);
+        Map<Long, List<AssigneeVO>> assigneesByTaskId = new HashMap<>();
+        Map<Long, Set<Long>> seenUserIdsByTaskId = new HashMap<>();
+        for (PmTaskMember member : members) {
+            SysUser user = userMap.get(member.getUserId());
+            if (user == null) {
+                continue;
+            }
+            Set<Long> seenUserIds = seenUserIdsByTaskId.computeIfAbsent(
+                    member.getTaskId(), key -> new HashSet<>());
+            if (!seenUserIds.add(member.getUserId())) {
+                continue;
+            }
+            assigneesByTaskId.computeIfAbsent(member.getTaskId(), key -> new ArrayList<>())
+                    .add(toAssigneeVO(user));
+        }
+        assigneesByTaskId.values().forEach(this::sortAssignees);
+        eventByTaskId.forEach((taskId, event) -> event.setAssignees(
+                assigneesByTaskId.getOrDefault(taskId, Collections.emptyList())));
+    }
+
+    /**
+     * 批量补充周期计划负责人，供周视图卡片展示。
+     */
+    private void attachRecurringPlanAssignees(List<CalendarEventVO> events) {
+        Map<Long, CalendarEventVO> eventByPlanId = indexEvents(events);
+        if (eventByPlanId.isEmpty()) {
+            return;
+        }
+
+        LambdaQueryWrapper<PmRecurringPlanAssignee> query = new LambdaQueryWrapper<>();
+        query.in(PmRecurringPlanAssignee::getPlanId, eventByPlanId.keySet())
+                .eq(PmRecurringPlanAssignee::getRole, ASSIGNEE_ROLE_RESPONSIBLE);
+        List<PmRecurringPlanAssignee> assignments = recurringPlanAssigneeMapper.selectList(query);
+        if (assignments.isEmpty()) {
+            return;
+        }
+
+        Set<Long> userIds = assignments.stream()
+                .map(PmRecurringPlanAssignee::getUserId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(HashSet::new));
+        Map<Long, SysUser> userMap = loadUserMap(userIds);
+        Map<Long, List<AssigneeVO>> assigneesByPlanId = new HashMap<>();
+        Map<Long, Set<Long>> seenUserIdsByPlanId = new HashMap<>();
+        for (PmRecurringPlanAssignee assignment : assignments) {
+            SysUser user = userMap.get(assignment.getUserId());
+            if (user == null) {
+                continue;
+            }
+            Set<Long> seenUserIds = seenUserIdsByPlanId.computeIfAbsent(
+                    assignment.getPlanId(), key -> new HashSet<>());
+            if (!seenUserIds.add(assignment.getUserId())) {
+                continue;
+            }
+            assigneesByPlanId.computeIfAbsent(assignment.getPlanId(), key -> new ArrayList<>())
+                    .add(toAssigneeVO(user));
+        }
+        assigneesByPlanId.values().forEach(this::sortAssignees);
+        eventByPlanId.forEach((planId, event) -> event.setAssignees(
+                assigneesByPlanId.getOrDefault(planId, Collections.emptyList())));
+    }
+
+    private Map<Long, CalendarEventVO> indexEvents(List<CalendarEventVO> events) {
+        Map<Long, CalendarEventVO> result = new HashMap<>();
+        for (CalendarEventVO event : events) {
+            if (event.getSourceId() != null) {
+                result.put(event.getSourceId(), event);
+            }
+        }
+        return result;
+    }
+
+    private Map<Long, SysUser> loadUserMap(Set<Long> userIds) {
+        if (userIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        Map<Long, SysUser> result = new HashMap<>();
+        for (SysUser user : sysUserService.listByIds(userIds)) {
+            if (user.getId() != null) {
+                result.put(user.getId(), user);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 批量补充创建人昵称，供前端在负责人为空时回退展示。
+     */
+    private void attachCreatorNames(List<CalendarEventVO> events) {
+        Set<Long> creatorIds = events.stream()
+                .map(CalendarEventVO::getCreatorId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(HashSet::new));
+        if (creatorIds.isEmpty()) {
+            return;
+        }
+
+        Map<Long, SysUser> userMap = loadUserMap(creatorIds);
+        for (CalendarEventVO event : events) {
+            SysUser creator = userMap.get(event.getCreatorId());
+            if (creator != null) {
+                event.setCreatorName(displayUserName(creator));
+            }
+        }
+    }
+
+    private String displayUserName(SysUser user) {
+        return StringUtils.hasText(user.getNickname()) ? user.getNickname() : user.getUsername();
+    }
+
+    private void sortAssignees(List<AssigneeVO> assignees) {
+        assignees.sort(Comparator.comparing(
+                AssigneeVO::getNickname,
+                Comparator.nullsLast(String::compareToIgnoreCase)
+        ));
     }
 
     private LambdaQueryWrapper<PmRecurringPlan> recurringPlanBaseQuery(Long projectId,
@@ -528,7 +686,7 @@ public class CalendarServiceImpl implements CalendarService {
     private AssigneeVO toAssigneeVO(SysUser user) {
         AssigneeVO assignee = new AssigneeVO();
         assignee.setUserId(user.getId());
-        assignee.setNickname(StringUtils.hasText(user.getNickname()) ? user.getNickname() : user.getUsername());
+        assignee.setNickname(displayUserName(user));
         assignee.setAvatar(user.getAvatar());
         return assignee;
     }

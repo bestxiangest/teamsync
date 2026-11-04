@@ -337,4 +337,3 @@ function handleRootPathRedirect(to, next) {
 function isUnauthorizedError(error) {
     return isHttpError(error) && error.code === ApiStatus.unauthorized;
 }
-//# sourceMappingURL=beforeEach.js.map

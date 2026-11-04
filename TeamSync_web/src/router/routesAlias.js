@@ -8,4 +8,3 @@ export var RoutesAlias;
     RoutesAlias["Login"] = "/auth/login";
     RoutesAlias["Dashboard"] = "/dashboard/console"; // 工作台
 })(RoutesAlias || (RoutesAlias = {}));
-//# sourceMappingURL=routesAlias.js.map

@@ -74,4 +74,3 @@ export const staticRoutes = [
         ]
     }
 ];
-//# sourceMappingURL=staticRoutes.js.map

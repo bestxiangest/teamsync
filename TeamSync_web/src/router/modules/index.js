@@ -19,4 +19,3 @@ export const routeModules = [
     resultRoutes,
     exceptionRoutes
 ];
-//# sourceMappingURL=index.js.map

@@ -52,4 +52,3 @@ export const projectRoutes = {
         }
     ]
 };
-//# sourceMappingURL=project.js.map

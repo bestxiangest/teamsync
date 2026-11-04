@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -50,8 +49,22 @@ public class BigScreenServiceImpl implements BigScreenService {
     private static final String PLAN_STATUS_ACTIVE = "ACTIVE";
     private static final String PLAN_RESPONSIBLE_ROLE = "RESPONSIBLE";
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    /** 大屏接口的绝对时间格式：不带时区，前端按屏幕本地时间解析 */
+    private static final DateTimeFormatter SCREEN_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private static final DateTimeFormatter SHORT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MM/dd HH:mm");
+    private static final DateTimeFormatter FULL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
     private static final DateTimeFormatter SHORT_DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd");
+
+    /**
+     * 各列表返回上限。
+     * 大屏面板可点击展开全部明细，因此上限只用于防止极端数据量，不再按“屏幕能放几行”来截断。
+     */
+    private static final int URGENT_TASK_LIMIT = 40;
+    private static final int TIMELINE_LIMIT = 40;
+    private static final int PROJECT_RISK_LIMIT = 20;
+    private static final int RECURRING_PLAN_LIMIT = 20;
+    private static final int COLLABORATION_LIMIT = 20;
+    private static final int CALENDAR_CHIP_LIMIT = 20;
 
     private final PmProjectMapper projectMapper;
     private final PmTaskMapper taskMapper;
@@ -137,10 +150,10 @@ public class BigScreenServiceImpl implements BigScreenService {
         vo.setSummaryCards(buildSummaryCards(projects, pendingTasks, recurringPlans, now, today));
         vo.setManagementSnapshotCards(buildManagementSnapshotCards(allTasks, pendingTasks, stageMap, projectRisks, assigneeAggregates, now));
         vo.setUrgentTasks(buildUrgentTasks(pendingTasks, projectMap, executorIdsByTask, userMap, now));
-        vo.setTodayTimeline(buildTodayTimeline(pendingTasks, today, now));
+        vo.setTodayTimeline(buildTodayTimeline(allTasks, stageMap, today, now));
         vo.setProjectRisks(projectRisks);
         vo.setRecurringPlans(recurringPlanVos);
-        vo.setAssigneeSummaryCards(buildAssigneeSummaryCards(assigneeAggregates, allTasks, stageMap, projects, today));
+        vo.setAssigneeSummaryCards(buildAssigneeSummaryCards(assigneeAggregates, allTasks, stageMap, tasksByProject.size(), today));
         vo.setAssigneeWall(buildAssigneeWall(assigneeAggregates));
         vo.setWorkloadRanking(buildWorkloadRanking(assigneeAggregates));
         vo.setCollaborationReminders(collaborationReminders);
@@ -154,8 +167,8 @@ public class BigScreenServiceImpl implements BigScreenService {
                 sevenDaysLater
         ));
         vo.setSevenDayCalendar(buildSevenDayCalendar(pendingTasks, recurringPlans, today, sevenDaysLater));
-        vo.setDailyFocus(buildDailyFocus(pendingTasks, recurringPlans, executorIdsByTask, assigneeIdsByPlan, userMap, today, now));
-        vo.setMilestoneCards(buildMilestoneCards(projects, tasksByProject, projectRisks));
+        // 与本次统计使用同一个 now，前端据此校准时钟并做秒级倒计时
+        vo.setServerTime(now.format(SCREEN_DATE_TIME_FORMATTER));
         return vo;
     }
 
@@ -296,18 +309,22 @@ public class BigScreenServiceImpl implements BigScreenService {
         int overdueCount = (int) pendingTasks.stream()
                 .filter(task -> task.getDueTime() != null && task.getDueTime().isBefore(now))
                 .count();
+        int noDueCount = (int) pendingTasks.stream().filter(task -> task.getDueTime() == null).count();
         int completionRate = allTasks.isEmpty() ? 0 : (int) Math.round(doneCount * 100.0 / allTasks.size());
-        int overdueRate = allTasks.isEmpty() ? 0 : (int) Math.round(overdueCount * 100.0 / allTasks.size());
+        // 逾期率以“未完成任务”为分母：历史已完成任务不该把当前的逾期比例稀释成 0%
+        int overdueRate = pendingTasks.isEmpty() ? 0 : (int) Math.round(overdueCount * 100.0 / pendingTasks.size());
         int riskProjectCount = (int) projectRisks.stream()
                 .filter(project -> "high".equals(project.riskLevel()) || "attention".equals(project.riskLevel()))
                 .count();
         int workloadRiskCount = (int) assigneeAggregates.stream()
-                .filter(aggregate -> aggregate.overdueCount > 0 || aggregate.todoCount >= 6)
+                .map(this::resolveAssigneeRiskLevel)
+                .filter(level -> "high".equals(level) || "attention".equals(level))
                 .count();
 
         return List.of(
-                kpi("completion-rate", "任务完成率", completionRate, "统计全部活跃任务", "flat", "success", "check"),
-                kpi("overdue-rate", "任务逾期率", overdueRate, overdueCount + " 项逾期", overdueCount > 0 ? "up" : "flat", "danger", "warning"),
+                kpi("completion-rate", "任务完成率", completionRate, doneCount + " / " + allTasks.size() + " 项", "flat", "success", "check"),
+                kpi("overdue-rate", "待办逾期率", overdueRate, overdueCount + " / " + pendingTasks.size() + " 项待办", overdueCount > 0 ? "up" : "flat", "danger", "warning"),
+                kpi("no-due", "未设置截止", noDueCount, noDueCount > 0 ? "需补排期" : "已全部排期", noDueCount > 0 ? "up" : "flat", "warning", "calendar"),
                 kpi("risk-projects", "风险项目", riskProjectCount, "高风险与需关注", riskProjectCount > 0 ? "up" : "flat", "warning", "folder"),
                 kpi("workload-risk", "负载风险成员", workloadRiskCount, "逾期或待办偏高", workloadRiskCount > 0 ? "up" : "flat", "primary", "team")
         );
@@ -331,7 +348,7 @@ public class BigScreenServiceImpl implements BigScreenService {
         return pendingTasks.stream()
                 .filter(task -> task.getDueTime() != null || normalizePriority(task.getPriority()) >= 2)
                 .sorted(buildTaskUrgencyComparator(now))
-                .limit(6)
+                .limit(URGENT_TASK_LIMIT)
                 .map(task -> new TaskReminderScreenVO.UrgentTaskItemVO(
                         task.getId(),
                         safeText(task.getTitle(), "未命名任务"),
@@ -340,25 +357,37 @@ public class BigScreenServiceImpl implements BigScreenService {
                         priorityText(task.getPriority()),
                         priorityLevel(task.getPriority()),
                         formatRemainingTime(task.getDueTime(), now),
+                        formatScreenDateTime(task.getDueTime()),
                         resolveTaskStatus(task.getDueTime(), now)
                 ))
                 .collect(Collectors.toList());
     }
 
-    private List<TaskReminderScreenVO.TimelineTaskItemVO> buildTodayTimeline(List<PmTask> pendingTasks,
+    /**
+     * 今日截止时间轴。
+     * 包含今天到期的已完成任务，否则“今日无截止任务”与“今日任务已全部完成”在屏幕上无法区分。
+     */
+    private List<TaskReminderScreenVO.TimelineTaskItemVO> buildTodayTimeline(List<PmTask> allTasks,
+                                                                             Map<Long, PmTaskStage> stageMap,
                                                                              LocalDate today,
                                                                              LocalDateTime now) {
-        return pendingTasks.stream()
+        return allTasks.stream()
                 .filter(task -> task.getDueTime() != null && task.getDueTime().toLocalDate().equals(today))
-                .sorted(Comparator.comparing(PmTask::getDueTime))
-                .limit(6)
-                .map(task -> new TaskReminderScreenVO.TimelineTaskItemVO(
-                        task.getId(),
-                        task.getDueTime().format(TIME_FORMATTER),
-                        safeText(task.getTitle(), "未命名任务"),
-                        formatTimelineCountdown(task.getDueTime(), now),
-                        resolveTaskStatus(task.getDueTime(), now)
-                ))
+                .sorted(Comparator.comparing((PmTask task) -> isTaskDone(task, stageMap))
+                        .thenComparing(PmTask::getDueTime))
+                .limit(TIMELINE_LIMIT)
+                .map(task -> {
+                    boolean done = isTaskDone(task, stageMap);
+                    return new TaskReminderScreenVO.TimelineTaskItemVO(
+                            task.getId(),
+                            task.getDueTime().format(TIME_FORMATTER),
+                            safeText(task.getTitle(), "未命名任务"),
+                            done ? "已完成" : formatTimelineCountdown(task.getDueTime(), now),
+                            formatScreenDateTime(task.getDueTime()),
+                            done ? "normal" : resolveTaskStatus(task.getDueTime(), now),
+                            done
+                    );
+                })
                 .collect(Collectors.toList());
     }
 
@@ -366,27 +395,37 @@ public class BigScreenServiceImpl implements BigScreenService {
                                                                            Map<Long, List<PmTask>> tasksByProject,
                                                                            LocalDateTime now) {
         return projects.stream()
+                // 只评估还有未完成任务的项目：休眠项目没有在办任务，不该占满风险面板
+                .filter(project -> !tasksByProject.getOrDefault(project.getId(), Collections.emptyList()).isEmpty())
                 .map(project -> {
                     List<PmTask> tasks = tasksByProject.getOrDefault(project.getId(), Collections.emptyList());
                     int overdueCount = (int) tasks.stream()
                             .filter(task -> task.getDueTime() != null && task.getDueTime().isBefore(now))
                             .count();
+                    int dueSoonCount = (int) tasks.stream()
+                            .filter(task -> task.getDueTime() != null
+                                    && !task.getDueTime().isBefore(now)
+                                    && !task.getDueTime().isAfter(now.plusHours(48)))
+                            .count();
                     int progress = clamp(project.getProgress() == null ? 0 : project.getProgress(), 0, 100);
-                    String riskLevel = resolveProjectRiskLevel(progress, overdueCount);
+                    String riskLevel = resolveProjectRiskLevel(progress, overdueCount, dueSoonCount);
                     return new TaskReminderScreenVO.ProjectRiskItemVO(
                             project.getId(),
                             safeText(project.getName(), "未命名项目"),
                             progress,
+                            tasks.size(),
                             overdueCount,
                             riskLevel,
                             riskText(riskLevel)
                     );
                 })
                 .sorted(
-                        Comparator.comparing(TaskReminderScreenVO.ProjectRiskItemVO::overdueTaskCount, Comparator.reverseOrder())
+                        Comparator.comparing((TaskReminderScreenVO.ProjectRiskItemVO risk) -> riskWeight(risk.riskLevel()), Comparator.reverseOrder())
+                                .thenComparing(TaskReminderScreenVO.ProjectRiskItemVO::overdueTaskCount, Comparator.reverseOrder())
+                                .thenComparing(TaskReminderScreenVO.ProjectRiskItemVO::pendingTaskCount, Comparator.reverseOrder())
                                 .thenComparing(TaskReminderScreenVO.ProjectRiskItemVO::progress)
                 )
-                .limit(5)
+                .limit(PROJECT_RISK_LIMIT)
                 .collect(Collectors.toList());
     }
 
@@ -396,7 +435,7 @@ public class BigScreenServiceImpl implements BigScreenService {
                                                                                        LocalDateTime now) {
         return plans.stream()
                 .sorted(Comparator.comparing(PmRecurringPlan::getNextRunAt, Comparator.nullsLast(LocalDateTime::compareTo)))
-                .limit(5)
+                .limit(RECURRING_PLAN_LIMIT)
                 .map(plan -> {
                     LocalDateTime dueTime = calculatePlanDueTime(plan);
                     return new TaskReminderScreenVO.RecurringPlanReminderItemVO(
@@ -465,7 +504,7 @@ public class BigScreenServiceImpl implements BigScreenService {
     private List<TaskReminderScreenVO.KpiCardItemVO> buildAssigneeSummaryCards(List<AssigneeAggregate> aggregates,
                                                                                 List<PmTask> allTasks,
                                                                                 Map<Long, PmTaskStage> stageMap,
-                                                                                List<PmProject> projects,
+                                                                                int activeProjectCount,
                                                                                 LocalDate today) {
         int highLoadCount = (int) aggregates.stream().filter(aggregate -> aggregate.todoCount >= 6).count();
         int overdueAssigneeCount = (int) aggregates.stream().filter(aggregate -> aggregate.overdueCount > 0).count();
@@ -476,10 +515,10 @@ public class BigScreenServiceImpl implements BigScreenService {
 
         return List.of(
                 kpi("active-members", "今日需处理成员", aggregates.size(), "实时统计", "flat", "primary", "user"),
-                kpi("top-load", "负载最高成员", highLoadCount, "待办较多", "flat", "warning", "crown"),
+                kpi("top-load", "负载最高成员", highLoadCount, "待办 6 项以上", "flat", "warning", "crown"),
                 kpi("overdue-members", "逾期责任人", overdueAssigneeCount, overdueAssigneeCount > 0 ? "需跟进" : "暂无逾期", overdueAssigneeCount > 0 ? "up" : "flat", "danger", "warning"),
                 kpi("done-today", "今日完成任务", doneTodayCount, "今日更新", "flat", "success", "check"),
-                kpi("collaboration", "协作中项目", projects.size(), "活跃项目", "flat", "purple", "team")
+                kpi("collaboration", "在办项目", activeProjectCount, "有未完成任务", "flat", "purple", "team")
         );
     }
 
@@ -509,7 +548,7 @@ public class BigScreenServiceImpl implements BigScreenService {
     private List<TaskReminderScreenVO.WorkloadRankingItemVO> buildWorkloadRanking(List<AssigneeAggregate> aggregates) {
         List<TaskReminderScreenVO.WorkloadRankingItemVO> result = new ArrayList<>();
         int rank = 1;
-        for (AssigneeAggregate aggregate : aggregates.stream().limit(6).collect(Collectors.toList())) {
+        for (AssigneeAggregate aggregate : aggregates) {
             String riskLevel = resolveAssigneeRiskLevel(aggregate);
             result.add(new TaskReminderScreenVO.WorkloadRankingItemVO(
                     rank++,
@@ -554,7 +593,7 @@ public class BigScreenServiceImpl implements BigScreenService {
                     urgencyText(urgency)
             ));
         }
-        return result.stream().limit(5).collect(Collectors.toList());
+        return result.stream().limit(COLLABORATION_LIMIT).collect(Collectors.toList());
     }
 
     private List<TaskReminderScreenVO.KpiCardItemVO> buildSevenDaySummaryCards(List<PmTask> pendingTasks,
@@ -620,86 +659,11 @@ public class BigScreenServiceImpl implements BigScreenService {
                     dayId++,
                     weekdayText(date),
                     date.format(SHORT_DATE_FORMATTER),
-                    chips.stream().limit(6).collect(Collectors.toList()),
+                    chips.stream().limit(CALENDAR_CHIP_LIMIT).collect(Collectors.toList()),
                     totalCount
             ));
         }
         return result;
-    }
-
-    private List<TaskReminderScreenVO.DailyFocusItemVO> buildDailyFocus(List<PmTask> pendingTasks,
-                                                                         List<PmRecurringPlan> plans,
-                                                                         Map<Long, List<Long>> executorIdsByTask,
-                                                                         Map<Long, List<Long>> assigneeIdsByPlan,
-                                                                         Map<Long, SysUser> userMap,
-                                                                         LocalDate today,
-                                                                         LocalDateTime now) {
-        List<TaskReminderScreenVO.DailyFocusItemVO> result = new ArrayList<>();
-        for (int index = 0; index < 6; index++) {
-            LocalDate date = today.plusDays(index);
-            FocusCandidate candidate = pendingTasks.stream()
-                    .filter(task -> task.getDueTime() != null && task.getDueTime().toLocalDate().equals(date))
-                    .sorted(buildTaskUrgencyComparator(now))
-                    .map(task -> FocusCandidate.fromTask(task, resolveTaskAssigneeName(task, executorIdsByTask, userMap), now))
-                    .findFirst()
-                    .orElseGet(() -> plans.stream()
-                            .filter(plan -> {
-                                LocalDateTime dueTime = calculatePlanDueTime(plan);
-                                return dueTime != null && dueTime.toLocalDate().equals(date);
-                            })
-                            .findFirst()
-                            .map(plan -> FocusCandidate.fromPlan(plan, resolvePlanAssigneeName(plan, assigneeIdsByPlan, userMap), now))
-                            .orElse(null));
-
-            if (candidate == null) {
-                continue;
-            }
-            result.add(new TaskReminderScreenVO.DailyFocusItemVO(
-                    candidate.id,
-                    date.format(SHORT_DATE_FORMATTER) + "（" + weekdayText(date) + "）",
-                    candidate.title,
-                    candidate.assigneeName,
-                    formatRemainingTime(candidate.dueTime, now),
-                    candidate.status
-            ));
-        }
-        return result;
-    }
-
-    private List<TaskReminderScreenVO.ProjectMilestoneItemVO> buildMilestoneCards(
-            List<PmProject> projects,
-            Map<Long, List<PmTask>> tasksByProject,
-            List<TaskReminderScreenVO.ProjectRiskItemVO> projectRisks) {
-        Map<Long, TaskReminderScreenVO.ProjectRiskItemVO> riskMap = projectRisks.stream()
-                .collect(Collectors.toMap(TaskReminderScreenVO.ProjectRiskItemVO::id, Function.identity(), (left, right) -> left));
-        return projects.stream()
-                .filter(project -> tasksByProject.containsKey(project.getId()))
-                .sorted(
-                        Comparator.comparing((PmProject project) -> riskSortValue(riskMap.get(project.getId())), Comparator.reverseOrder())
-                                .thenComparing(project -> safeInt(project.getProgress()))
-                )
-                .limit(3)
-                .map(project -> {
-                    List<PmTask> tasks = tasksByProject.getOrDefault(project.getId(), Collections.emptyList());
-                    LocalDateTime expectedDate = tasks.stream()
-                            .map(PmTask::getDueTime)
-                            .filter(Objects::nonNull)
-                            .min(LocalDateTime::compareTo)
-                            .orElse(project.getUpdatedAt());
-                    TaskReminderScreenVO.ProjectRiskItemVO risk = riskMap.get(project.getId());
-                    String riskLevel = risk == null ? "normal" : ("high".equals(risk.riskLevel()) ? "high" : ("attention".equals(risk.riskLevel()) ? "medium" : "normal"));
-                    return new TaskReminderScreenVO.ProjectMilestoneItemVO(
-                            project.getId(),
-                            safeText(project.getName(), "未命名项目"),
-                            "下一批任务交付",
-                            expectedDate == null ? "-" : expectedDate.toLocalDate().format(SHORT_DATE_FORMATTER) + "（" + weekdayText(expectedDate.toLocalDate()) + "）",
-                            clamp(safeInt(project.getProgress()), 0, 100),
-                            riskLevel,
-                            riskText(riskLevel),
-                            milestoneTone(riskLevel)
-                    );
-                })
-                .collect(Collectors.toList());
     }
 
     private Comparator<PmTask> buildTaskUrgencyComparator(LocalDateTime now) {
@@ -811,6 +775,10 @@ public class BigScreenServiceImpl implements BigScreenService {
         return 3;
     }
 
+    private String formatScreenDateTime(LocalDateTime dateTime) {
+        return dateTime == null ? null : dateTime.format(SCREEN_DATE_TIME_FORMATTER);
+    }
+
     private String formatRemainingTime(LocalDateTime dueTime, LocalDateTime now) {
         if (dueTime == null) {
             return "-";
@@ -836,8 +804,14 @@ public class BigScreenServiceImpl implements BigScreenService {
         return dueTime.isBefore(now) ? "逾期 " + remaining.replace(" ", "") : "剩余 " + remaining.replace(" ", "");
     }
 
+    /** 跨年的时间点必须带上年份：周期计划的下次执行常常落在明年，只显示 MM/dd 会被误读成已逾期 */
     private String formatDateTime(LocalDateTime dateTime) {
-        return dateTime == null ? "-" : dateTime.format(SHORT_DATE_TIME_FORMATTER);
+        if (dateTime == null) {
+            return "-";
+        }
+        return dateTime.getYear() == LocalDate.now().getYear()
+                ? dateTime.format(SHORT_DATE_TIME_FORMATTER)
+                : dateTime.format(FULL_DATE_TIME_FORMATTER);
     }
 
     private String resolveProjectName(PmProject project) {
@@ -932,11 +906,15 @@ public class BigScreenServiceImpl implements BigScreenService {
         return interval == 1 ? "每" + text : "每" + interval + text;
     }
 
-    private String resolveProjectRiskLevel(int progress, int overdueCount) {
+    /**
+     * 项目风险只看交付节奏：已逾期、48 小时内到期。
+     * 进度百分比不参与判定 —— 多数任务没有截止时间时进度偏低是常态，用它判风险会把休眠项目误报成高风险。
+     */
+    private String resolveProjectRiskLevel(int progress, int overdueCount, int dueSoonCount) {
         if (overdueCount >= 3 || (overdueCount > 0 && progress < 55)) {
             return "high";
         }
-        if (overdueCount > 0 || progress < 70) {
+        if (overdueCount > 0 || dueSoonCount > 0) {
             return "attention";
         }
         return "normal";
@@ -958,17 +936,28 @@ public class BigScreenServiceImpl implements BigScreenService {
         return "正常";
     }
 
+    /**
+     * 成员负载评估以“交付风险”为主、待办体量为辅。
+     * 单纯待办多不等于高风险：本系统里大量任务没有截止时间，按体量判定会把长期清单误报成高风险。
+     */
     private String resolveAssigneeRiskLevel(AssigneeAggregate aggregate) {
-        if (aggregate.overdueCount >= 2 || aggregate.todoCount >= 8) {
+        if (aggregate.overdueCount >= 2 || (aggregate.overdueCount > 0 && aggregate.todoCount >= 8)) {
             return "high";
         }
-        if (aggregate.overdueCount > 0 || aggregate.todoCount >= 6) {
+        if (aggregate.overdueCount > 0 || aggregate.todayDueCount >= 3 || aggregate.todoCount >= 12) {
             return "attention";
         }
-        if (aggregate.todoCount >= 4) {
+        if (aggregate.todoCount >= 6) {
             return "medium";
         }
         return "low";
+    }
+
+    private int riskWeight(String riskLevel) {
+        if ("high".equals(riskLevel)) {
+            return 3;
+        }
+        return "attention".equals(riskLevel) ? 2 : 1;
     }
 
     private String assigneeRiskText(String riskLevel) {
@@ -1017,33 +1006,6 @@ public class BigScreenServiceImpl implements BigScreenService {
         return weeks[date.getDayOfWeek().getValue() % 7];
     }
 
-    private int riskSortValue(TaskReminderScreenVO.ProjectRiskItemVO risk) {
-        if (risk == null) {
-            return 0;
-        }
-        if ("high".equals(risk.riskLevel())) {
-            return 3;
-        }
-        if ("attention".equals(risk.riskLevel())) {
-            return 2;
-        }
-        return 1;
-    }
-
-    private String milestoneTone(String riskLevel) {
-        if ("high".equals(riskLevel)) {
-            return "warning";
-        }
-        if ("medium".equals(riskLevel) || "attention".equals(riskLevel)) {
-            return "purple";
-        }
-        return "success";
-    }
-
-    private int safeInt(Integer value) {
-        return value == null ? 0 : value;
-    }
-
     private int clamp(int value, int min, int max) {
         return Math.max(min, Math.min(max, value));
     }
@@ -1076,52 +1038,6 @@ public class BigScreenServiceImpl implements BigScreenService {
                 return 0;
             }
             return (int) Math.round(doneCount * 100.0 / totalCount);
-        }
-    }
-
-    private static final class FocusCandidate {
-        private final Long id;
-        private final String title;
-        private final String assigneeName;
-        private final LocalDateTime dueTime;
-        private final String status;
-
-        private FocusCandidate(Long id, String title, String assigneeName, LocalDateTime dueTime, String status) {
-            this.id = id;
-            this.title = title;
-            this.assigneeName = assigneeName;
-            this.dueTime = dueTime;
-            this.status = status;
-        }
-
-        private static FocusCandidate fromTask(PmTask task, String assigneeName, LocalDateTime now) {
-            LocalDateTime dueTime = task.getDueTime();
-            return new FocusCandidate(
-                    task.getId(),
-                    task.getTitle(),
-                    assigneeName,
-                    dueTime,
-                    dueTime != null && dueTime.isBefore(now) ? "overdue" : "normal"
-            );
-        }
-
-        private static FocusCandidate fromPlan(PmRecurringPlan plan, String assigneeName, LocalDateTime now) {
-            LocalDateTime dueTime = null;
-            if (plan.getNextRunAt() != null) {
-                if (plan.getStartTime() != null && plan.getDueTime() != null) {
-                    Duration duration = Duration.between(plan.getStartTime(), plan.getDueTime());
-                    dueTime = duration.isNegative() ? plan.getNextRunAt() : plan.getNextRunAt().plus(duration);
-                } else {
-                    dueTime = plan.getDueTime() == null ? plan.getNextRunAt() : plan.getDueTime();
-                }
-            }
-            return new FocusCandidate(
-                    plan.getId(),
-                    plan.getTitle(),
-                    assigneeName,
-                    dueTime,
-                    dueTime != null && dueTime.isBefore(now) ? "overdue" : "normal"
-            );
         }
     }
 }

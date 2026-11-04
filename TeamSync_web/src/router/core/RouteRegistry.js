@@ -74,4 +74,3 @@ export class RouteRegistry {
         this.registered = true;
     }
 }
-//# sourceMappingURL=RouteRegistry.js.map

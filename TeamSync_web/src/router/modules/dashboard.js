@@ -41,4 +41,3 @@ export const dashboardRoutes = {
         }
     ]
 };
-//# sourceMappingURL=dashboard.js.map

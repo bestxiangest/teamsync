@@ -100,4 +100,3 @@ export class RouteTransformer {
         return segments.length > 0 ? `/${segments[0]}` : '/';
     }
 }
-//# sourceMappingURL=RouteTransformer.js.map

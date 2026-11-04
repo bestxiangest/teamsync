@@ -27,4 +27,3 @@ export function setupAfterEachGuard(router) {
         }
     });
 }
-//# sourceMappingURL=afterEach.js.map

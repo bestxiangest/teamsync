@@ -9,6 +9,16 @@ export const systemRoutes = {
     },
     children: [
         {
+            path: 'wecom-push',
+            name: 'WecomPush',
+            component: '/system/wecom-push',
+            meta: {
+                title: '企业微信推送',
+                icon: 'ri:wechat-line',
+                roles: ['R_SUPER', 'R_ADMIN']
+            }
+        },
+        {
             path: 'user',
             name: 'User',
             component: '/system/user',
@@ -52,4 +62,3 @@ export const systemRoutes = {
         }
     ]
 };
-//# sourceMappingURL=system.js.map

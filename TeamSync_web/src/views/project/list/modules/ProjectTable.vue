@@ -43,53 +43,59 @@
     <ElTableColumn label="操作" width="340" fixed="right">
       <template #default="{ row }">
         <template v-if="activeTab === 'active'">
-          <ElButton type="primary" link size="small" @click="$emit('view', row)">
-            <ArtSvgIcon icon="ri:dashboard-3-line" class="mr-1" />
-            看板
-          </ElButton>
-          <ElButton type="success" link size="small" @click="$emit('files', row)">
-            <ArtSvgIcon icon="ri:folder-line" class="mr-1" />
-            文档
-          </ElButton>
-
-          <ElDropdown trigger="click" @command="(cmd: string) => $emit('command', cmd, row)">
-            <ElButton link size="small" class="ml-2">
-              更多<ArtSvgIcon icon="ri:arrow-down-s-line" class="el-icon--right" />
+          <div class="table-actions">
+            <ElButton type="primary" link size="small" @click="$emit('view', row)">
+              <ArtSvgIcon icon="ri:dashboard-3-line" class="mr-1" />
+              看板
             </ElButton>
-            <template #dropdown>
-              <ElDropdownMenu>
-                <ElDropdownItem command="move">
-                  <ArtSvgIcon icon="ri:folder-transfer-line" class="mr-1" />移动到...
-                </ElDropdownItem>
+            <ElButton type="success" link size="small" @click="$emit('files', row)">
+              <ArtSvgIcon icon="ri:folder-line" class="mr-1" />
+              文档
+            </ElButton>
 
-                <ElDropdownItem v-if="isOwner(row)" command="edit">
-                  <ArtSvgIcon icon="ri:settings-3-line" class="mr-1" />设置
-                </ElDropdownItem>
+            <ElDropdown
+              class="more-action"
+              trigger="click"
+              @command="(cmd: string) => $emit('command', cmd, row)"
+            >
+              <ElButton link size="small">
+                更多<ArtSvgIcon icon="ri:arrow-down-s-line" class="el-icon--right" />
+              </ElButton>
+              <template #dropdown>
+                <ElDropdownMenu>
+                  <ElDropdownItem command="move">
+                    <ArtSvgIcon icon="ri:folder-transfer-line" class="mr-1" />移动到...
+                  </ElDropdownItem>
 
-                <ElDropdownItem v-if="canManageProject(row)" command="archive">
-                  <ArtSvgIcon icon="ri:archive-line" class="mr-1" />归档
-                </ElDropdownItem>
+                  <ElDropdownItem v-if="canManageProject(row)" command="edit">
+                    <ArtSvgIcon icon="ri:edit-line" class="mr-1" />编辑
+                  </ElDropdownItem>
 
-                <ElDropdownItem
-                  v-if="canManageProject(row)"
-                  command="delete"
-                  divided
-                  style="color: var(--el-color-danger)"
-                >
-                  <ArtSvgIcon icon="ri:delete-bin-line" class="mr-1" />删除
-                </ElDropdownItem>
+                  <ElDropdownItem v-if="canManageProject(row)" command="archive">
+                    <ArtSvgIcon icon="ri:archive-line" class="mr-1" />归档
+                  </ElDropdownItem>
 
-                <ElDropdownItem
-                  v-if="canQuitProject(row)"
-                  command="quit"
-                  :divided="canManageProject(row)"
-                  style="color: var(--el-color-danger)"
-                >
-                  <ArtSvgIcon icon="ri:logout-box-r-line" class="mr-1" />退出项目
-                </ElDropdownItem>
-              </ElDropdownMenu>
-            </template>
-          </ElDropdown>
+                  <ElDropdownItem
+                    v-if="canManageProject(row)"
+                    command="delete"
+                    divided
+                    style="color: var(--el-color-danger)"
+                  >
+                    <ArtSvgIcon icon="ri:delete-bin-line" class="mr-1" />删除
+                  </ElDropdownItem>
+
+                  <ElDropdownItem
+                    v-if="canQuitProject(row)"
+                    command="quit"
+                    :divided="canManageProject(row)"
+                    style="color: var(--el-color-danger)"
+                  >
+                    <ArtSvgIcon icon="ri:logout-box-r-line" class="mr-1" />退出项目
+                  </ElDropdownItem>
+                </ElDropdownMenu>
+              </template>
+            </ElDropdown>
+          </div>
         </template>
 
         <template v-else>
@@ -97,11 +103,23 @@
             <ArtSvgIcon icon="ri:dashboard-3-line" class="mr-1" />
             查看看板
           </ElButton>
-          <ElButton v-if="canManageProject(row)" type="success" link size="small" @click="$emit('unarchive', row)">
+          <ElButton
+            v-if="canManageProject(row)"
+            type="success"
+            link
+            size="small"
+            @click="$emit('unarchive', row)"
+          >
             <ArtSvgIcon icon="ri:inbox-unarchive-line" class="mr-1" />
             还原项目
           </ElButton>
-          <ElButton v-if="canManageProject(row)" type="danger" link size="small" @click="$emit('delete', row)">
+          <ElButton
+            v-if="canManageProject(row)"
+            type="danger"
+            link
+            size="small"
+            @click="$emit('delete', row)"
+          >
             <ArtSvgIcon icon="ri:delete-bin-line" class="mr-1" />
             删除
           </ElButton>
@@ -140,7 +158,9 @@
 
   const isSystemAdmin = computed(() => {
     const roles = userStore.info?.roles || []
-    return userStore.info?.isAdmin === true || roles.includes('R_SUPER') || roles.includes('R_ADMIN')
+    return (
+      userStore.info?.isAdmin === true || roles.includes('R_SUPER') || roles.includes('R_ADMIN')
+    )
   })
 
   const isOwner = (row: Project) => {
@@ -195,5 +215,14 @@
 
   .mr-1 {
     margin-right: 4px;
+  }
+
+  .table-actions {
+    display: inline-flex;
+    align-items: flex-start;
+  }
+
+  .more-action {
+    margin-left: 8px;
   }
 </style>

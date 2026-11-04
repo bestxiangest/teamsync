@@ -25,6 +25,8 @@ TeamSync_web/src/types/import/components.d.ts
 *.log
 .playwright-mcp/
 TeamSync/logs/
+TeamSync_web/logs/
+doc/db-backup/
 TeamSync_web/TeamSync_web_dist_*.zip
 
 # Local-only env overrides

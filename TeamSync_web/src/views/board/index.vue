@@ -2096,6 +2096,36 @@
        会把横向滚动条高度压为 0（不可见），这里用更高特异性的选择器 + !important 覆盖。
 -->
 <style lang="scss">
+  /*
+    看板页高度自适应浏览器。
+    .kanban-page 原先只有 height: var(--art-full-height)，该变量由 useLayoutHeight 用 JS
+    量取头部高度后写入 documentElement；一旦量取值偏小（头部/页签还没渲染完、外部容器
+    高度变化等），页面就会比可视区域高，底部「添加任务」按钮被挤出视口，必须先滚动才能看到。
+    这里把内容区改成确定高度的 flex 链（#app-main 高度固定 → #app-content 是它的 flex 子项），
+    页面高度直接取浏览器剩余可视高度，不再依赖 JS 计算的变量；
+    同时保留原 height: var(--art-full-height) 作为不支持 :has() 的浏览器的兜底。
+  */
+  @media only screen and (min-width: 801px) {
+    #app-content:has(.kanban-page) {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    #app-content:has(.kanban-page) > .layout-content {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    #app-content:has(.kanban-page) > .layout-content > .kanban-page {
+      flex: 1 1 0;
+      height: auto;
+      min-height: 0;
+    }
+  }
+
   .kanban-scroll::-webkit-scrollbar {
     height: 8px !important;
   }

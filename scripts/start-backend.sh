@@ -126,6 +126,7 @@ start_backend() {
 	echo "   Jar:  $jar"
 	echo "   端口: $PORT"
 	echo "   日志: $LOG_FILE"
+	echo "   DB:   ${DB_URL:-application.yml 内置默认连接串（见 TeamSync/src/main/resources/application.yml）}"
 
 	# 工作目录切到后端模块，保证相对路径 (upload/ 等) 与 IDEA 运行一致
 	cd "$BACKEND_DIR"

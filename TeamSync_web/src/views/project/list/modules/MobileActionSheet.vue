@@ -35,37 +35,61 @@
           <span>移动到...</span>
         </div>
 
-        <div v-if="isOwner" class="action-item" @click="$emit('project-action', 'edit')">
-          <ArtSvgIcon icon="ri:settings-3-line" />
-          <span>设置</span>
+        <div v-if="canManageProject" class="action-item" @click="$emit('project-action', 'edit')">
+          <ArtSvgIcon icon="ri:edit-line" />
+          <span>编辑</span>
         </div>
 
-        <div v-if="canManageProject" class="action-item" @click="$emit('project-action', 'archive')">
+        <div
+          v-if="canManageProject"
+          class="action-item"
+          @click="$emit('project-action', 'archive')"
+        >
           <ArtSvgIcon icon="ri:archive-line" />
           <span>归档</span>
         </div>
 
-        <div v-if="canManageProject" class="action-item danger" @click="$emit('project-action', 'delete')">
+        <div
+          v-if="canManageProject"
+          class="action-item danger"
+          @click="$emit('project-action', 'delete')"
+        >
           <ArtSvgIcon icon="ri:delete-bin-line" />
           <span>删除</span>
         </div>
 
-        <div v-if="canQuitProject" class="action-item danger" @click="$emit('project-action', 'quit')">
+        <div
+          v-if="canQuitProject"
+          class="action-item danger"
+          @click="$emit('project-action', 'quit')"
+        >
           <ArtSvgIcon icon="ri:logout-box-r-line" />
           <span>退出项目</span>
         </div>
       </template>
 
       <template v-else>
-        <div v-if="canManageProject" class="action-item" @click="$emit('project-action', 'unarchive')">
+        <div
+          v-if="canManageProject"
+          class="action-item"
+          @click="$emit('project-action', 'unarchive')"
+        >
           <ArtSvgIcon icon="ri:inbox-unarchive-line" />
           <span>还原项目</span>
         </div>
-        <div v-if="canManageProject" class="action-item danger" @click="$emit('project-action', 'delete')">
+        <div
+          v-if="canManageProject"
+          class="action-item danger"
+          @click="$emit('project-action', 'delete')"
+        >
           <ArtSvgIcon icon="ri:delete-bin-line" />
           <span>删除项目</span>
         </div>
-        <div v-if="canQuitProject" class="action-item danger" @click="$emit('project-action', 'quit')">
+        <div
+          v-if="canQuitProject"
+          class="action-item danger"
+          @click="$emit('project-action', 'quit')"
+        >
           <ArtSvgIcon icon="ri:logout-box-r-line" />
           <span>退出项目</span>
         </div>
@@ -92,7 +116,9 @@
 
   const isSystemAdmin = computed(() => {
     const roles = userStore.info?.roles || []
-    return userStore.info?.isAdmin === true || roles.includes('R_SUPER') || roles.includes('R_ADMIN')
+    return (
+      userStore.info?.isAdmin === true || roles.includes('R_SUPER') || roles.includes('R_ADMIN')
+    )
   })
 
   const isOwner = computed(() => {

@@ -30,4 +30,3 @@ export const resultRoutes = {
         }
     ]
 };
-//# sourceMappingURL=result.js.map

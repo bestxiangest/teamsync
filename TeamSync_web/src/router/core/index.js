@@ -11,4 +11,3 @@ export { RouteTransformer } from './RouteTransformer';
 export { IframeRouteManager } from './IframeRouteManager';
 export { MenuProcessor } from './MenuProcessor';
 export { RoutePermissionValidator } from './RoutePermissionValidator';
-//# sourceMappingURL=index.js.map

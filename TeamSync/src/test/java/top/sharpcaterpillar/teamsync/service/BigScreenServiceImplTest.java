@@ -87,8 +87,11 @@ class BigScreenServiceImplTest {
                 assertThat(card.value()).isEqualTo(1);
             }
         });
+        assertThat(data.getServerTime()).isNotBlank();
         assertThat(data.getUrgentTasks()).extracting(TaskReminderScreenVO.UrgentTaskItemVO::taskName)
                 .contains("支付接口联调", "首页性能优化");
+        // dueTime 是前端秒级倒计时的绝对时间基准
+        assertThat(data.getUrgentTasks()).allSatisfy(item -> assertThat(item.dueTime()).isNotBlank());
         assertThat(data.getRecurringPlans()).singleElement().satisfies(item -> {
             assertThat(item.planName()).isEqualTo("月度服务器巡检");
             assertThat(item.assigneeName()).isEqualTo("张伟");
