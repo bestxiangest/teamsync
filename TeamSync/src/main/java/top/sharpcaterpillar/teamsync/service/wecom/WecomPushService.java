@@ -53,7 +53,7 @@ public class WecomPushService {
     public SettingsView settings() {
         Settings s = repository.settings();
         return new SettingsView(StringUtils.hasText(s.webhookCipher()), secret.isReady(), enabled,
-                s.dailyEnabled(), s.dailyTimes(), s.weeklyEnabled(), s.weeklyTimes(), s.projectIds(), "Asia/Shanghai", "周五");
+                s.dailyEnabled(), s.dailyTimes(), s.weeklyEnabled(), s.weeklyTimes(), s.projectIds(), "Asia/Shanghai", "周一至周五");
     }
 
     public SettingsView save(SettingsRequest request) {
@@ -97,12 +97,13 @@ public class WecomPushService {
 
     public void schedule(LocalDateTime now) {
         if (!enabled || !secret.isReady() || now.getMinute() % 30 != 0) return;
+        if (now.getDayOfWeek() == DayOfWeek.SATURDAY || now.getDayOfWeek() == DayOfWeek.SUNDAY) return;
         Settings s = repository.settings();
         if (!StringUtils.hasText(s.webhookCipher()) || s.projectIds().isEmpty()) return;
         String time = now.format(TIME);
         for (ReportType type : ReportType.values()) {
             boolean due = type == ReportType.DAILY ? s.dailyEnabled() && s.dailyTimes().contains(time)
-                    : s.weeklyEnabled() && now.getDayOfWeek() == DayOfWeek.FRIDAY && s.weeklyTimes().contains(time);
+                    : s.weeklyEnabled() && s.weeklyTimes().contains(time);
             String key = type + ":" + now.toLocalDate() + "T" + time;
             if (due && !repository.scheduledExists(key)) {
                 Preview report = report(type, s, now);

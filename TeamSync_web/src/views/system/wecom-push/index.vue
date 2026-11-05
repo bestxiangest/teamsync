@@ -45,22 +45,21 @@
           </ElFormItem>
           <ElFormItem label="推送项目">
             <div class="w-full">
-              <ElSelect
-                v-model="form.projectIds"
-                multiple
-                filterable
-                collapse-tags
-                collapse-tags-tooltip
-                class="w-full"
-                placeholder="选择未归档项目"
-              >
-                <ElOption
-                  v-for="project in projects"
+              <div class="actions">
+                <ElButton @click="openProjectDialog">选择项目</ElButton>
+                <span class="text-sm text-g-600"
+                  >已选 {{ form.projectIds.length }} / {{ projects.length }} 个未归档项目</span
+                >
+              </div>
+              <div v-if="selectedProjects.length" class="selected-projects">
+                <ElTag
+                  v-for="project in selectedProjects"
                   :key="project.id"
-                  :label="project.name"
-                  :value="project.id"
-                />
-              </ElSelect>
+                  :closable="!saving"
+                  @close="form.projectIds = form.projectIds.filter((id) => id !== project.id)"
+                  >{{ project.name }}</ElTag
+                >
+              </div>
               <p class="field-hint">仅列出未归档项目；统计时再次排除已归档、已删除项目。</p>
               <p v-if="removedProjects" class="text-sm text-orange-600"
                 >有 {{ removedProjects }} 个原选项目已不可用，本次已移除，请保存更新。</p
@@ -73,45 +72,51 @@
                 <h2>当日任务完成情况</h2>
                 <ElSwitch v-model="form.dailyEnabled" active-text="启用" />
               </div>
-              <ElFormItem label="每天推送时间（可多选）">
-                <ElSelect
-                  v-model="form.dailyTimes"
-                  multiple
-                  filterable
-                  collapse-tags
-                  collapse-tags-tooltip
-                  class="w-full"
-                  placeholder="例如 08:00、17:30"
-                  :disabled="!form.dailyEnabled"
-                >
-                  <ElOption v-for="time in timeOptions" :key="time" :label="time" :value="time" />
-                </ElSelect>
+              <ElFormItem label="周一至周五推送时间（可多选）">
+                <div class="w-full">
+                  <ElButton :disabled="!form.dailyEnabled" @click="openTimeDialog('DAILY')"
+                    >选择时间</ElButton
+                  >
+                  <div v-if="form.dailyTimes.length" class="selected-times">
+                    <ElTag
+                      v-for="time in form.dailyTimes"
+                      :key="time"
+                      :closable="form.dailyEnabled && !saving"
+                      @close="form.dailyTimes = form.dailyTimes.filter((value) => value !== time)"
+                      >{{ time }}</ElTag
+                    >
+                  </div>
+                  <p v-else class="field-hint">尚未选择推送时间</p>
+                </div>
               </ElFormItem>
               <p class="field-hint"
-                >汇总全部任务及今日到期情况，仅提醒已设置截止日期的未完成任务，包含未来到期任务。</p
+                >汇总全部任务及今日到期情况，仅提醒今天到期及历史逾期的未完成任务。</p
               >
             </div>
             <div class="schedule-card">
               <div class="section-heading">
-                <h2>本周任务完成情况</h2>
+                <h2>未来一周任务提醒</h2>
                 <ElSwitch v-model="form.weeklyEnabled" active-text="启用" />
               </div>
-              <ElFormItem label="每周五推送时间（可多选）">
-                <ElSelect
-                  v-model="form.weeklyTimes"
-                  multiple
-                  filterable
-                  collapse-tags
-                  collapse-tags-tooltip
-                  class="w-full"
-                  placeholder="例如 17:00、17:30"
-                  :disabled="!form.weeklyEnabled"
-                >
-                  <ElOption v-for="time in timeOptions" :key="time" :label="time" :value="time" />
-                </ElSelect>
+              <ElFormItem label="周一至周五推送时间（可多选）">
+                <div class="w-full">
+                  <ElButton :disabled="!form.weeklyEnabled" @click="openTimeDialog('WEEKLY')"
+                    >选择时间</ElButton
+                  >
+                  <div v-if="form.weeklyTimes.length" class="selected-times">
+                    <ElTag
+                      v-for="time in form.weeklyTimes"
+                      :key="time"
+                      :closable="form.weeklyEnabled && !saving"
+                      @close="form.weeklyTimes = form.weeklyTimes.filter((value) => value !== time)"
+                      >{{ time }}</ElTag
+                    >
+                  </div>
+                  <p v-else class="field-hint">尚未选择推送时间</p>
+                </div>
               </ElFormItem>
               <p class="field-hint"
-                >本周为周一至周日；汇总全部任务及本周到期情况，仅提醒已设置截止日期的未完成任务。</p
+                >从推送时刻起计算未来 7 天，仅提醒此范围内到期的未完成任务，超过 7 天不展示。</p
               >
             </div>
           </div>
@@ -119,7 +124,7 @@
             class="my-5"
             type="info"
             :closable="false"
-            title="时间统一为北京时间。平台总览统计所选未归档项目的全部任务，包含无截止日期任务；提醒明细仅展示已设置截止日期的未完成任务，包含未来到期任务。今日／本周到期统计单独列出，已逾期为未完成任务的子集。"
+            title="两类推送均在周一至周五按各自所选时间发送，周六、周日不自动推送。时间统一为北京时间。平台总览包含所选未归档项目的全部任务。日报提醒今天到期及历史逾期的未完成任务；周报提醒推送时刻起未来 7 天内到期的未完成任务。无截止日期任务不提醒。"
           />
           <div class="actions">
             <span v-if="dirty" class="text-sm text-g-600">配置已修改，请保存后预览或推送。</span>
@@ -148,7 +153,7 @@
           @change="preview = null"
         >
           <ElOption label="当日任务完成情况" value="DAILY" />
-          <ElOption label="本周任务完成情况" value="WEEKLY" />
+          <ElOption label="未来一周任务提醒" value="WEEKLY" />
         </ElSelect>
         <ElButton
           :loading="previewing"
@@ -175,7 +180,7 @@
         <p class="my-3">
           未完成{{ preview.total - preview.completed }}，提醒明细{{
             preview.tasks.length
-          }}项（仅含已设置截止日期）。 {{ reportType === 'DAILY' ? '今日' : '本周' }}到期{{
+          }}项（仅含已设置截止日期）。 {{ reportType === 'DAILY' ? '今日' : '未来7天' }}到期{{
             preview.periodTotal
           }}：已完成{{ preview.periodCompleted }}，处理中{{ preview.periodProcessing }}，未开始{{
             preview.periodNotStarted
@@ -185,7 +190,11 @@
           :data="preview.tasks"
           stripe
           max-height="480"
-          empty-text="暂无已设置截止日期的未完成任务"
+          :empty-text="
+            reportType === 'DAILY'
+              ? '暂无今日到期或历史逾期的未完成任务'
+              : '暂无未来7天内到期的未完成任务'
+          "
         >
           <ElTableColumn type="index" label="序号" width="65" />
           <ElTableColumn
@@ -194,7 +203,6 @@
             min-width="130"
             show-overflow-tooltip
           />
-          <ElTableColumn prop="id" label="任务编号" min-width="100" />
           <ElTableColumn prop="title" label="任务标题" min-width="190" show-overflow-tooltip />
           <ElTableColumn label="负责人" min-width="140"
             ><template #default="{ row }">{{ row.assignees || '未分配' }}</template></ElTableColumn
@@ -262,6 +270,81 @@
         <ElTableColumn prop="errorMessage" label="失败原因" min-width="220" />
       </ElTable>
     </div>
+
+    <ElDialog
+      v-model="projectDialogVisible"
+      title="选择推送项目"
+      width="min(880px, calc(100vw - 32px))"
+      append-to-body
+    >
+      <ElInput
+        v-model="projectSearch"
+        clearable
+        placeholder="搜索项目名称"
+        aria-label="搜索项目名称"
+      />
+      <div class="selection-toolbar">
+        <ElCheckbox
+          :model-value="allFilteredProjectsSelected"
+          :indeterminate="someFilteredProjectsSelected"
+          :disabled="!filteredProjects.length"
+          @change="toggleFilteredProjects"
+          >全选搜索结果（{{ filteredProjects.length }}）</ElCheckbox
+        >
+        <ElButton text :disabled="!draftProjectIds.length" @click="draftProjectIds = []"
+          >清空全部</ElButton
+        >
+      </div>
+      <div class="project-options">
+        <ElCheckboxGroup v-model="draftProjectIds" class="project-checkbox-grid">
+          <ElCheckbox
+            v-for="project in filteredProjects"
+            :key="project.id"
+            :value="project.id"
+            border
+            >{{ project.name }}</ElCheckbox
+          >
+        </ElCheckboxGroup>
+        <ElEmpty
+          v-if="!filteredProjects.length"
+          description="没有匹配的未归档项目"
+          :image-size="64"
+        />
+      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <span class="text-sm text-g-600">已选 {{ draftProjectIds.length }} 个项目</span>
+          <div class="actions">
+            <ElButton @click="projectDialogVisible = false">取消</ElButton>
+            <ElButton type="primary" @click="confirmProjects">确认选择</ElButton>
+          </div>
+        </div>
+      </template>
+    </ElDialog>
+
+    <ElDialog
+      v-model="timeDialogVisible"
+      :title="timeDialogType === 'DAILY' ? '选择当日任务推送时间' : '选择未来一周提醒推送时间'"
+      width="min(760px, calc(100vw - 32px))"
+      append-to-body
+    >
+      <p class="field-hint">周一至周五执行，周末跳过；北京时间，每半小时一个时间点，可多选。</p>
+      <ElCheckboxGroup v-model="draftTimes" class="time-checkbox-grid">
+        <ElCheckbox v-for="time in timeOptions" :key="time" :value="time" border>{{
+          time
+        }}</ElCheckbox>
+      </ElCheckboxGroup>
+      <template #footer>
+        <div class="dialog-footer">
+          <span class="text-sm text-g-600">已选 {{ draftTimes.length }} 个时间点</span>
+          <div class="actions">
+            <ElButton :disabled="!draftTimes.length" @click="draftTimes = []">清空</ElButton>
+            <ElButton @click="timeDialogVisible = false">取消</ElButton>
+            <ElButton type="primary" @click="confirmTimes">确认选择</ElButton>
+          </div>
+        </div>
+      </template>
+    </ElDialog>
   </div>
 </template>
 
@@ -305,6 +388,30 @@
     weeklyTimes: [],
     projectIds: []
   })
+  const projectDialogVisible = ref(false)
+  const projectSearch = ref('')
+  const draftProjectIds = ref<number[]>([])
+  const timeDialogVisible = ref(false)
+  const timeDialogType = ref<WecomReportType>('DAILY')
+  const draftTimes = ref<string[]>([])
+  const selectedProjects = computed(() =>
+    projects.value.filter((p) => form.projectIds.includes(p.id))
+  )
+  const filteredProjects = computed(() => {
+    const keyword = projectSearch.value.trim().toLocaleLowerCase()
+    return projects.value.filter((p) => p.name.toLocaleLowerCase().includes(keyword))
+  })
+  const filteredSelectedCount = computed(
+    () => filteredProjects.value.filter((p) => draftProjectIds.value.includes(p.id)).length
+  )
+  const allFilteredProjectsSelected = computed(
+    () =>
+      filteredProjects.value.length > 0 &&
+      filteredSelectedCount.value === filteredProjects.value.length
+  )
+  const someFilteredProjectsSelected = computed(
+    () => filteredSelectedCount.value > 0 && !allFilteredProjectsSelected.value
+  )
   const savedForm = ref('')
   const dirty = computed(() => JSON.stringify(form) !== savedForm.value)
   const canSend = computed(
@@ -331,6 +438,37 @@
   }
   let pollTimer: ReturnType<typeof setTimeout> | undefined
   let disposed = false
+
+  function openProjectDialog() {
+    draftProjectIds.value = [...form.projectIds]
+    projectSearch.value = ''
+    projectDialogVisible.value = true
+  }
+
+  function toggleFilteredProjects(checked: string | number | boolean) {
+    const visibleIds = new Set(filteredProjects.value.map((p) => p.id))
+    draftProjectIds.value = checked
+      ? [...new Set([...draftProjectIds.value, ...visibleIds])]
+      : draftProjectIds.value.filter((id) => !visibleIds.has(id))
+  }
+
+  function confirmProjects() {
+    form.projectIds = [...draftProjectIds.value].sort((a, b) => a - b)
+    projectDialogVisible.value = false
+  }
+
+  function openTimeDialog(type: WecomReportType) {
+    timeDialogType.value = type
+    draftTimes.value = [...(type === 'DAILY' ? form.dailyTimes : form.weeklyTimes)]
+    timeDialogVisible.value = true
+  }
+
+  function confirmTimes() {
+    const times = [...draftTimes.value].sort()
+    if (timeDialogType.value === 'DAILY') form.dailyTimes = times
+    else form.weeklyTimes = times
+    timeDialogVisible.value = false
+  }
 
   function jobTag(status: WecomJob['status']) {
     return status === 'SUCCESS' ? 'success' : status === 'FAILED' ? 'danger' : 'info'
@@ -486,6 +624,83 @@
     margin-left: 0;
   }
 
+  .selected-projects,
+  .selected-times {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .selected-projects {
+    max-height: 160px;
+    overflow: auto;
+  }
+
+  .selected-projects :deep(.el-tag) {
+    height: auto;
+    min-height: 24px;
+    padding-block: 4px;
+    white-space: normal;
+  }
+
+  .selected-projects :deep(.el-tag__content) {
+    overflow-wrap: anywhere;
+  }
+
+  .selection-toolbar,
+  .dialog-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .selection-toolbar {
+    margin-block: 16px;
+  }
+
+  .project-options {
+    height: min(360px, 45vh);
+    overflow: auto;
+  }
+
+  .project-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 1px;
+  }
+
+  .project-checkbox-grid :deep(.el-checkbox) {
+    height: auto;
+    min-height: 40px;
+    padding-block: 10px;
+    margin-right: 0;
+  }
+
+  .project-checkbox-grid :deep(.el-checkbox__label) {
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .time-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+    max-height: 50vh;
+    padding: 1px;
+    margin-top: 16px;
+    overflow: auto;
+  }
+
+  .time-checkbox-grid :deep(.el-checkbox) {
+    justify-content: center;
+    padding-inline: 8px;
+    margin-right: 0;
+  }
+
   .report-type {
     width: 220px;
   }
@@ -502,8 +717,13 @@
   }
 
   @media (width <= 768px) {
-    .schedule-grid {
+    .schedule-grid,
+    .project-checkbox-grid {
       grid-template-columns: 1fr;
+    }
+
+    .time-checkbox-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .section-heading {

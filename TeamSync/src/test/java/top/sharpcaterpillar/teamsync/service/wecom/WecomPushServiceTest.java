@@ -2,6 +2,8 @@ package top.sharpcaterpillar.teamsync.service.wecom;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import top.sharpcaterpillar.teamsync.entity.SysUser;
 import top.sharpcaterpillar.teamsync.mapper.SysUserMapper;
 import top.sharpcaterpillar.teamsync.service.wecom.WecomModels.*;
@@ -32,19 +34,41 @@ class WecomPushServiceTest {
         return settings;
     }
 
-    @Test
-    void onlyFridayProducesWeeklyReportAndUniqueSlotPreventsRepeatedEnqueue() {
+    @ParameterizedTest
+    @ValueSource(ints = {2, 3, 4, 5, 6})
+    void bothReportsRunOnEveryWeekdayAndDeduplicateEachSlot(int day) {
         configured();
-        service.schedule(LocalDateTime.of(2026, 11, 5, 17, 30));
-        verify(repository).enqueue(eq("DAILY:2026-11-05T17:30"), eq(ReportType.DAILY), eq("SCHEDULED"), eq("encrypted"), anyList());
-        verify(repository, never()).enqueue(anyString(), eq(ReportType.WEEKLY), anyString(), anyString(), anyList());
-        service.schedule(LocalDateTime.of(2026, 11, 6, 17, 30));
-        verify(repository).enqueue(eq("WEEKLY:2026-11-06T17:30"), eq(ReportType.WEEKLY), eq("SCHEDULED"), eq("encrypted"), anyList());
+        LocalDateTime now = LocalDateTime.of(2026, 11, day, 17, 30);
+        service.schedule(now);
+        verify(repository).enqueue(eq("DAILY:" + now.toLocalDate() + "T17:30"), eq(ReportType.DAILY), eq("SCHEDULED"), eq("encrypted"), anyList());
+        verify(repository).enqueue(eq("WEEKLY:" + now.toLocalDate() + "T17:30"), eq(ReportType.WEEKLY), eq("SCHEDULED"), eq("encrypted"), anyList());
         clearInvocations(repository);
         when(repository.scheduledExists(anyString())).thenReturn(true);
-        service.schedule(LocalDateTime.of(2026, 11, 6, 17, 30, 15));
-        service.schedule(LocalDateTime.of(2026, 11, 6, 17, 31));
+        service.schedule(now.plusSeconds(15));
+        service.schedule(now.plusMinutes(1));
         verify(repository, never()).enqueue(anyString(), any(), anyString(), anyString(), anyList());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {7, 8})
+    void weekendsDoNotReadConfigurationOrEnqueueEitherReport(int day) {
+        when(secret.isReady()).thenReturn(true);
+        service.schedule(LocalDateTime.of(2026, 11, day, 17, 30));
+        verifyNoInteractions(repository, client);
+    }
+
+    @Test
+    void eachReportUsesItsOwnEnabledFlagAndSelectedTimes() {
+        configured();
+        service.schedule(LocalDateTime.of(2026, 11, 2, 8, 0));
+        verify(repository).enqueue(eq("DAILY:2026-11-02T08:00"), eq(ReportType.DAILY), eq("SCHEDULED"), eq("encrypted"), anyList());
+        verify(repository, never()).enqueue(anyString(), eq(ReportType.WEEKLY), anyString(), anyString(), anyList());
+        clearInvocations(repository);
+        when(repository.settings()).thenReturn(new Settings("encrypted", false, List.of("17:30"),
+                true, List.of("17:30"), List.of(1L)));
+        service.schedule(LocalDateTime.of(2026, 11, 2, 17, 30));
+        verify(repository, never()).enqueue(anyString(), eq(ReportType.DAILY), anyString(), anyString(), anyList());
+        verify(repository).enqueue(eq("WEEKLY:2026-11-02T17:30"), eq(ReportType.WEEKLY), eq("SCHEDULED"), eq("encrypted"), anyList());
     }
 
     @Test
@@ -58,8 +82,8 @@ class WecomPushServiceTest {
         Preview result = service.preview(ReportType.DAILY);
         assertThat(result.total()).isEqualTo(3);
         assertThat(result.projectCount()).isEqualTo(1);
-        assertThat(result.tasks()).extracting(TaskDetail::id).containsExactly(1L);
-        assertThat(result.messages().getFirst()).contains("平台总任务3", "未完成2").doesNotContain("#2 未排期任务");
+        assertThat(result.tasks()).isEmpty();
+        assertThat(result.messages().getFirst()).contains("平台总任务3", "未完成2").doesNotContain("|未排期任务|");
         assertThat(result.undated()).isEqualTo(1);
         verify(repository).tasks(List.of(1L));
     }
@@ -86,6 +110,7 @@ class WecomPushServiceTest {
         SettingsView view = service.save(new SettingsRequest("", true, List.of("17:30", "08:00", "08:00"), false, List.of(), List.of(1L)));
         verify(repository).save(eq(new Settings("encrypted", true, List.of("08:00", "17:30"), false, List.of(), List.of(1L))), isNull());
         assertThat(view.webhookConfigured()).isTrue();
+        assertThat(view.weeklyDay()).isEqualTo("周一至周五");
         assertThat(view.toString()).doesNotContain("encrypted");
     }
 

@@ -15,7 +15,7 @@ class WecomReportFormatterTest {
     private final LocalDateTime now = LocalDateTime.of(2026, 11, 6, 12, 0);
 
     @Test
-    void dailySummarizesAllTasksButOnlyListsUnfinishedTasksWithDeadlinesIncludingFuture() {
+    void dailyListsOnlyTodayAndHistoricalOverdueWhileKeepingPlatformTotals() {
         Preview result = formatter.format(ReportType.DAILY, List.of(
                 task(1, 1, now.minusDays(1)), task(2, 2, now.minusDays(1)),
                 task(3, 1, now.plusHours(1)), task(4, 0, now),
@@ -27,30 +27,31 @@ class WecomReportFormatterTest {
         assertThat(result.processing()).isEqualTo(2);
         assertThat(result.notStarted()).isEqualTo(3);
         assertThat(result.overdue()).isEqualTo(2);
-        assertThat(result.tasks()).extracting(TaskDetail::id).containsExactly(2L, 5L, 4L, 6L);
+        assertThat(result.tasks()).extracting(TaskDetail::id).containsExactly(2L, 5L, 4L);
         assertThat(result.messages().getFirst()).contains("平台总任务7，已完成2，处理中2，未开始3，已逾期2")
-                .contains("所选 3 个未归档项目", "今日到期3：已完成1，处理中1，未开始1", "未完成5", "未完成任务提醒（4项")
-                .contains("|序号|项目名称|任务编号及标题|负责人|优先级|任务状态|截止时间|到期提示|")
-                .contains("逾期1天", "明日到期")
-                .doesNotContain("#7 任务7", "未设置截止日期1", "|未设置|未排期|");
+                .contains("所选 3 个未归档项目", "今日到期3：已完成1，处理中1，未开始1", "未完成5", "今日到期及历史逾期未完成任务（3项")
+                .contains("|序号|项目名称|任务标题|负责人|优先级|任务状态|截止时间|到期提示|")
+                .contains("|1|项目|任务2|未分配|普通|处理中|", "逾期1天")
+                .doesNotContain("任务编号", "#2 任务2")
+                .doesNotContain("|任务6|", "|任务7|", "明日到期", "|未设置|未排期|");
         assertThat(result.periodTotal()).isEqualTo(3);
         assertThat(result.undated()).isEqualTo(1);
     }
 
     @Test
-    void weeklyUsesMondayThroughSundayIncludingFutureWeekendAndEarlierUnfinishedTasks() {
+    void weeklyUsesRollingSevenDaysFromPushTimeAndExcludesEarlierDeadlines() {
         Preview result = formatter.format(ReportType.WEEKLY, List.of(
-                task(1, 0, LocalDateTime.of(2026, 11, 1, 23, 59)),
-                task(2, 1, LocalDateTime.of(2026, 11, 1, 23, 59)),
-                task(3, 1, LocalDateTime.of(2026, 11, 2, 0, 0)),
-                task(4, 0, LocalDateTime.of(2026, 11, 8, 23, 59)),
-                task(5, 2, LocalDateTime.of(2026, 11, 9, 0, 0))), 1, now);
-        assertThat(result.startDate().toString()).isEqualTo("2026-11-02");
-        assertThat(result.endDate().toString()).isEqualTo("2026-11-08");
-        assertThat(result.total()).isEqualTo(5);
-        assertThat(result.periodTotal()).isEqualTo(2);
-        assertThat(result.tasks()).extracting(TaskDetail::id).containsExactly(1L, 4L, 5L);
-        assertThat(result.messages().getFirst()).contains("截止时间", "2026-11-08 23:59", "本周到期2：已完成1，处理中0，未开始1");
+                task(1, 0, now.minusSeconds(1)), task(2, 2, now), task(3, 1, now.plusDays(1)),
+                task(4, 0, now.plusDays(7)), task(5, 2, now.plusDays(7).plusSeconds(1)), task(6, 0, null)), 1, now);
+        assertThat(result.startDate().toString()).isEqualTo("2026-11-06");
+        assertThat(result.endDate().toString()).isEqualTo("2026-11-13");
+        assertThat(result.total()).isEqualTo(6);
+        assertThat(result.periodTotal()).isEqualTo(3);
+        assertThat(result.tasks()).extracting(TaskDetail::id).containsExactly(2L, 4L);
+        assertThat(result.messages().getFirst()).contains("未来一周任务提醒", "2026-11-06 12:00 ～ 2026-11-13 12:00",
+                "未来7天到期3：已完成1，处理中1，未开始1", "|1|项目|任务2|", "|2|项目|任务4|")
+                .doesNotContain("任务编号", "#2 任务2", "#4 任务4")
+                .doesNotContain("|任务1|", "|任务3|", "|任务5|", "|任务6|");
     }
 
     @Test
@@ -82,9 +83,10 @@ class WecomReportFormatterTest {
                 task(1, 1, now.minusDays(30)), task(2, 2, now.plusDays(7)), task(3, 0, null)), 2, now);
         assertThat(result.total()).isEqualTo(3);
         assertThat(result.periodTotal()).isZero();
-        assertThat(result.tasks()).extracting(TaskDetail::id).containsExactly(2L);
-        assertThat(result.messages().getFirst()).contains("平台总任务3", "今日到期0", "完成率33.3%", "未完成2", "剩余7天")
-                .doesNotContain("暂无未完成任务");
+        assertThat(result.tasks()).isEmpty();
+        assertThat(result.messages().getFirst()).contains("平台总任务3", "今日到期0", "完成率33.3%", "未完成2",
+                "暂无今日到期或历史逾期的未完成任务")
+                .doesNotContain("|任务2|", "全部任务均已完成");
     }
 
     @Test
@@ -107,8 +109,8 @@ class WecomReportFormatterTest {
             assertThat(result.processing()).isEqualTo(1);
             assertThat(result.tasks()).isEmpty();
             assertThat(result.messages()).singleElement().asString()
-                    .contains("未完成2", "暂无已设置截止日期的未完成任务")
-                    .doesNotContain("#1 任务1", "#2 任务2", "全部任务均已完成", "未排期");
+                    .contains("未完成2", type == ReportType.DAILY ? "暂无今日到期或历史逾期的未完成任务" : "暂无未来7天内到期的未完成任务")
+                    .doesNotContain("|任务1|", "|任务2|", "全部任务均已完成", "未排期");
         }
     }
 
