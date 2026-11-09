@@ -10,20 +10,19 @@
   >
     <ElForm ref="formRef" :model="form" :rules="rules" label-width="88px">
       <ElFormItem label="所属项目" prop="projectId">
-        <ElSelect
-          v-model="form.projectId"
+        <ElTreeSelect
+          v-model="projectSelectKey"
+          :data="projectTree"
+          :loading="groupsLoading"
+          node-key="value"
+          :props="projectTreeProps"
           filterable
+          default-expand-all
+          :render-after-expand="false"
           placeholder="选择项目"
           style="width: 100%"
           @change="handleProjectChange"
-        >
-          <ElOption
-            v-for="project in projects"
-            :key="project.id"
-            :label="project.name"
-            :value="project.id"
-          />
-        </ElSelect>
+        />
       </ElFormItem>
 
       <ElFormItem label="卡片分组" prop="stageId">
@@ -169,12 +168,22 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref } from 'vue'
+  import { computed, reactive, ref } from 'vue'
   import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
   import dayjs from 'dayjs'
   import { createTask, getBoardList, type BoardStage } from '@/api/board'
   import { getProjectMembers, type Member } from '@/api/member'
-  import type { Project } from '@/api/project'
+  import { fetchGroupList, type Project, type ProjectGroup } from '@/api/project'
+
+  interface ProjectTreeOption {
+    value: string
+    label: string
+    children?: ProjectTreeOption[]
+  }
+
+  const projectNodeValue = (projectId: number) => `project-${projectId}`
+  const groupNodeValue = (groupId: number) => `group-${groupId}`
+  const projectTreeProps = { label: 'label', children: 'children' }
 
   const props = defineProps<{
     projects: Project[]
@@ -200,6 +209,10 @@
   const membersLoading = ref(false)
   const stages = ref<BoardStage[]>([])
   const members = ref<Member[]>([])
+  const groupOptions = ref<ProjectGroup[]>([])
+  const groupsLoading = ref(false)
+  const projectSelectKey = ref<string>()
+  let groupsLoaded = false
   let projectContextSequence = 0
 
   const form = reactive({
@@ -212,6 +225,48 @@
     dueTime: '',
     assigneeIds: [] as number[],
     followerIds: [] as number[]
+  })
+
+  const projectTree = computed<ProjectTreeOption[]>(() => {
+    const groupNodeMap = new Map<number, ProjectTreeOption>()
+    const groupedNodes: ProjectTreeOption[] = []
+
+    for (const group of groupOptions.value) {
+      const groupNode: ProjectTreeOption = {
+        value: groupNodeValue(group.id),
+        label: group.name,
+        children: []
+      }
+      groupNodeMap.set(group.id, groupNode)
+      groupedNodes.push(groupNode)
+    }
+
+    const ungroupedProjects: ProjectTreeOption[] = []
+    const sortedProjects = [...props.projects].sort((first, second) =>
+      first.name.localeCompare(second.name, 'zh-CN')
+    )
+    for (const project of sortedProjects) {
+      const projectNode: ProjectTreeOption = {
+        value: projectNodeValue(project.id),
+        label: project.name
+      }
+      const groupNode = project.groupId ? groupNodeMap.get(project.groupId) : undefined
+      if (groupNode?.children) {
+        groupNode.children.push(projectNode)
+      } else {
+        ungroupedProjects.push(projectNode)
+      }
+    }
+
+    const tree = groupedNodes.filter((groupNode) => (groupNode.children?.length || 0) > 0)
+    if (ungroupedProjects.length > 0) {
+      tree.push({
+        value: 'group-ungrouped',
+        label: '未分组',
+        children: ungroupedProjects
+      })
+    }
+    return tree
   })
 
   const validateTimeRange = (
@@ -247,6 +302,7 @@
     projectContextSequence += 1
     stagesLoading.value = false
     membersLoading.value = false
+    projectSelectKey.value = undefined
     form.projectId = undefined
     form.stageId = undefined
     form.title = ''
@@ -300,7 +356,29 @@
     }
   }
 
-  const handleProjectChange = (projectId?: number) => {
+  const projectIdFromKey = (key?: string) => {
+    if (!key?.startsWith('project-')) return undefined
+    const projectId = Number(key.slice('project-'.length))
+    return Number.isFinite(projectId) && projectId > 0 ? projectId : undefined
+  }
+
+  const loadGroups = async () => {
+    if (groupsLoaded) return
+    groupsLoading.value = true
+    try {
+      groupOptions.value = (await fetchGroupList()) || []
+      groupsLoaded = true
+    } catch (error) {
+      console.error('加载项目分组失败:', error)
+    } finally {
+      groupsLoading.value = false
+    }
+  }
+
+  const handleProjectChange = (value?: string | number) => {
+    const projectId = typeof value === 'number' ? value : projectIdFromKey(value)
+    form.projectId = projectId
+
     if (!projectId) {
       projectContextSequence += 1
       stages.value = []
@@ -314,9 +392,11 @@
 
   const handleOpen = async () => {
     resetForm()
+    await loadGroups()
     const presetProjectId = props.defaultProjectId
     if (presetProjectId && props.projects.some((project) => project.id === presetProjectId)) {
       form.projectId = presetProjectId
+      projectSelectKey.value = projectNodeValue(presetProjectId)
       await loadProjectContext(presetProjectId)
     }
   }
